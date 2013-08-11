@@ -1,6 +1,10 @@
+--external dependencies
 tween = require "lib/tween"
-class = require "lib/30log"
+require "lib/middleclass"
 
+--internal modules
+require "src/node"
+require "src/view"
 require "src/states"
 require "src/blackjack"
 require "src/utilities"
