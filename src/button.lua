@@ -6,8 +6,10 @@ function Button.create(params)
    -- Defaults options
    local temp = { backgroundColor = {0,0,0,255},
                   hoverBackgroundColor = {63,63,63,255},
+                  activeBackgroundColor = {127,127,127,255},
                   textColor = {255,255,255,255},
                   hoverTextColor = {255,255,255,255},
+                  activeTextColor = {255,255,255,255},
                   text = 'Button',
                   height = 60,
                   width = 200,
@@ -22,6 +24,8 @@ function Button.create(params)
 
    temp.hover = false
 
+   temp.audio = love.audio.newSource("media/audio/click.mp3", "static")
+
    return temp
 end
 
@@ -35,12 +39,18 @@ function Button:update(dt)
 
    if self.hover and mouseClicked then
       text = 'Button was clicked'
+      self.audio:play()
+      self.active = true
+   else
+      self.active = false
    end
 end
 
 function Button:draw()
    love.graphics.setFont(self.font)
-   if self.hover then
+   if self.active then
+      love.graphics.setColor(self.activeBackgroundColor)
+   elseif self.hover then
       love.graphics.setColor(self.hoverBackgroundColor)
    else
       love.graphics.setColor(self.backgroundColor)

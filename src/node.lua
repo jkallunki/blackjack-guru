@@ -16,3 +16,11 @@ function Node:initialize()
    -- table of child nodes
    self.children = {}
 end
+
+function Node:addChild(newChild)
+   table.insert(self.children, newChild)
+end
+
+function Node:removeChild(index)
+   table.remove(self.children, index)
+end

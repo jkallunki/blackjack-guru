@@ -1,9 +1,10 @@
 --external dependencies
 tween = require "lib/tween"
-require "lib/middleclass"
+class = require "lib/middleclass"
 
 --internal modules
 require "src/node"
+require "src/stage"
 require "src/view"
 require "src/states"
 require "src/blackjack"
@@ -11,6 +12,8 @@ require "src/utilities"
 require "src/button"
 
 function love.load()
+   love.window.setMode(640, 480, {resizable=false, fsaa=16})
+
    --image = love.graphics.newImage("cake.jpg")
    pos =    {   x = 200,
                 y = 200 }
@@ -44,6 +47,7 @@ function love.load()
    button = Button.create({   text = 'Test',
                               x = 10,
                               y = 10 })
+
 
 end
 
