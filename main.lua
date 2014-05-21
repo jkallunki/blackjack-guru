@@ -5,7 +5,6 @@ _     = require "lib/moses"
 
 --internal modules
 require "src/node"
-require "src/stage"
 require "src/view"
 require "src/blackjack"
 require "src/utilities"
@@ -34,9 +33,11 @@ function love.load()
    mainMenu = View:new()
    mainMenu:setImage("media/images/green.png")
 
+   -- sample label
    label = Label:new({y = 100})
    mainMenu:addChild(label)
 
+   -- sample button
    button = Button:new({  text = 'Test',
                           x = 10,
                           y = 10 })
@@ -44,7 +45,6 @@ function love.load()
       label:setText('Button was clicked')
    end)
    mainMenu:addChild(button)
-
 
    stage:addChild(mainMenu)
 
