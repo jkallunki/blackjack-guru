@@ -1,35 +1,24 @@
 Button = Node:subclass('Button')
 
 function Button:initialize(params)
-
-   Node.initialize(self)
-
    -- Defaults options
-   local defaults = { backgroundColor = {0,0,0,255},
-                  hoverBackgroundColor = {63,63,63,255},
-                  activeBackgroundColor = {127,127,127,255},
-                  textColor = {255,255,255,255},
-                  hoverTextColor = {255,255,255,255},
-                  activeTextColor = {255,255,255,255},
-                  text = 'Button',
-                  height = 60,
-                  width = 200,
-                  x = 0,
-                  y = 0,
-                  font = love.graphics.newFont("media/fonts/nunitolight.ttf", 28) }
+   self.defaults = { backgroundColor = {0,0,0,255},
+                     hoverBackgroundColor = {63,63,63,255},
+                     activeBackgroundColor = {127,127,127,255},
+                     textColor = {255,255,255,255},
+                     hoverTextColor = {255,255,255,255},
+                     activeTextColor = {255,255,255,255},
+                     text = 'Button',
+                     height = 60,
+                     width = 200,
+                     x = 0,
+                     y = 0,
+                     font = love.graphics.newFont("media/fonts/nunitolight.ttf", 28),
+                     audio = love.audio.newSource("media/audio/click.mp3", "static") }
 
-   -- Replace default options with given parameters
-   for k,v in pairs(defaults) do 
-      self[k] = v
-   end
-
-   for k,v in pairs(params) do 
-      self[k] = v
-   end
+   Node.initialize(self, params)
 
    self.hover = false
-
-   self.audio = love.audio.newSource("media/audio/click.mp3", "static")
 end
 
 function Button:update(dt)
@@ -41,8 +30,10 @@ function Button:update(dt)
    end
 
    if self.hover and mouseClicked then
-      text = 'Button was clicked'
-      self.audio:play()
+      if(self.clickHandler ~= nil) then
+         self.clickHandler()
+      end
+      if(self.audio ~= nil) then self.audio:play() end
       self.active = true
    else
       self.active = false
@@ -65,4 +56,8 @@ function Button:draw()
       love.graphics.setColor(self.textColor)
    end
    love.graphics.printf(self.text, self.x, self.y + 10, self.width, 'center')
+end
+
+function Button:setClickHandler(handler)
+   self.clickHandler = handler
 end

@@ -34,13 +34,17 @@ function love.load()
    mainMenu = View:new()
    mainMenu:setImage("media/images/green.png")
 
+   label = Label:new({y = 100})
+   mainMenu:addChild(label)
+
    button = Button:new({  text = 'Test',
                           x = 10,
                           y = 10 })
+   button:setClickHandler(function()
+      label:setText('Button was clicked')
+   end)
    mainMenu:addChild(button)
 
-   label = Label:new({y = 100})
-   mainMenu:addChild(label)
 
    stage:addChild(mainMenu)
 

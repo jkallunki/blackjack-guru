@@ -3,7 +3,20 @@
 
 Node = class('Node')
 
-function Node:initialize()
+function Node:initialize(params)
+
+   if(self.defaults ~= nil) then
+      for k,v in pairs(self.defaults) do 
+         self[k] = v
+      end
+   end
+
+   if(params ~= nil) then
+      for k,v in pairs(params) do 
+         self[k] = v
+      end
+   end
+
    -- is the node rendered?
    self.visible = true
 
