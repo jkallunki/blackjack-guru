@@ -1,10 +1,11 @@
-Button = {}
-Button.__index = Button
+Button = Node:subclass('Button')
 
-function Button.create(params)
+function Button:initialize(params)
+
+   Node.initialize(self)
 
    -- Defaults options
-   local temp = { backgroundColor = {0,0,0,255},
+   local defaults = { backgroundColor = {0,0,0,255},
                   hoverBackgroundColor = {63,63,63,255},
                   activeBackgroundColor = {127,127,127,255},
                   textColor = {255,255,255,255},
@@ -15,18 +16,20 @@ function Button.create(params)
                   width = 200,
                   x = 0,
                   y = 0,
-                  font = fonts.button }
-
-   setmetatable(temp, Button)
+                  font = love.graphics.newFont("media/fonts/nunitolight.ttf", 28) }
 
    -- Replace default options with given parameters
-   for k,v in pairs(params) do temp[k] = v end
+   for k,v in pairs(defaults) do 
+      self[k] = v
+   end
 
-   temp.hover = false
+   for k,v in pairs(params) do 
+      self[k] = v
+   end
 
-   temp.audio = love.audio.newSource("media/audio/click.mp3", "static")
+   self.hover = false
 
-   return temp
+   self.audio = love.audio.newSource("media/audio/click.mp3", "static")
 end
 
 function Button:update(dt)

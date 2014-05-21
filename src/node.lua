@@ -24,3 +24,23 @@ end
 function Node:removeChild(index)
    table.remove(self.children, index)
 end
+
+function Node:update()
+   _.each(self.children, function(key, val)
+      val:update()
+   end)
+end
+
+function Node:draw()
+   if(self.image ~= nil) then
+      love.graphics.draw(self.image, love.graphics.getWidth() / 2, love.graphics.getHeight() / 2, 0, 1, 1, 512, 256)
+   end
+
+   _.each(self.children, function(key, val)
+      val:draw()
+   end)
+end
+
+function Node:setImage(path)
+   self.image = love.graphics.newImage(path)
+end

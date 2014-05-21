@@ -27,7 +27,7 @@ end
 
 function Game:draw()
    love.graphics.setColor({255,255,255,255})
-   love.graphics.draw(img["bg"], love.graphics.getWidth() / 2, love.graphics.getHeight() / 2, 0, 1, 1, 512, 256)
+   --love.graphics.draw(img["bg"], love.graphics.getWidth() / 2, love.graphics.getHeight() / 2, 0, 1, 1, 512, 256)
    love.graphics.draw(img["icon"], pos["x"]*1.2, pos["y"]*1.2)
    love.graphics.setColor(colors.text)
    love.graphics.setFont(fonts.title)
