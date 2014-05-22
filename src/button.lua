@@ -30,7 +30,11 @@ end
 function Button:update(dt)
    if(self.clickable) then
       mx, my = love.mouse.getPosition()
-      if mx >= self:getX() and mx <= self:getX() + self.width and my >= self:getY() and my <= self:getY() + self.height then
+      if mx >= self:getX() and 
+         mx <= self:getX() + self.width and 
+         my >= self:getY() and 
+         my <= self:getY() + self.height
+      then
          self.hover = true
       else
          self.hover = false

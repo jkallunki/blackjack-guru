@@ -4,7 +4,7 @@ function Label:initialize(params)
 
    -- Default options
    self.defaults = { color = {255,255,255,255},
-                     text = 'Label',
+                     text = 'Text',
                      height = 60,
                      width = 200,
                      x = 0,

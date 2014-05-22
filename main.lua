@@ -10,11 +10,10 @@ require "src/blackjack"
 require "src/utilities"
 require "src/button"
 require "src/label"
+require "src/title"
 
 function love.load()
    love.window.setMode(640, 480, {resizable=false, fsaa=16})
-
-   fonts =  {  title = love.graphics.newFont("media/fonts/blanch.otf", 60) }
 
    -- Utilities.delay(0.5, function()
    --    loadTween = tween(1, pos, {x = 300, y = 300}, 'linear', function()
@@ -67,7 +66,7 @@ function love.load()
    gameView:addChild(testNode)
 
    -- sample label
-   label2 = Label:new({x = 310, y = 100})
+   label2 = Title:new({x = 310, y = 100, text = 'Title'})
    testNode:addChild(label2)
 
    stage:addChild(gameView)
@@ -76,7 +75,7 @@ end
 
 function love.update(dt)
    stage:beforeUpdate()
-   
+
    tween.update(dt)
    Utilities.update(dt)
    stage:update()
