@@ -54,10 +54,10 @@ function love.load()
    -- another view
    gameView = View:new()
    gameView:hide()
-   testNode = Node:new({x = 50, y = 50})
+   testNode = Node:new({x = -200, y = -20})
    button2 = Button:new({ text = 'Test2',
                           x = 310,
-                          y = 10 })
+                          y = 30 })
    button2:setClickHandler(function()
       mainMenu:show()
       gameView:hide()
@@ -75,6 +75,8 @@ function love.load()
 end
 
 function love.update(dt)
+   stage:beforeUpdate()
+   
    tween.update(dt)
    Utilities.update(dt)
    stage:update()

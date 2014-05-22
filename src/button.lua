@@ -22,22 +22,29 @@ function Button:initialize(params)
    self.clickable = false
 end
 
-function Button:update(dt)
-   mx, my = love.mouse.getPosition()
-   if mx >= self:getX() and mx <= self:getX() + self.width and my >= self:getY() and my <= self:getY() + self.height then
-      self.hover = true
-   else
-      self.hover = false
-   end
+function Button:beforeUpdate()
+   self.clickable = self:isVisible()
+   Node.beforeUpdate(self)
+end
 
-   if self.hover and mouseClicked then
-      if(self.clickHandler ~= nil) then
-         self.clickHandler()
+function Button:update(dt)
+   if(self.clickable) then
+      mx, my = love.mouse.getPosition()
+      if mx >= self:getX() and mx <= self:getX() + self.width and my >= self:getY() and my <= self:getY() + self.height then
+         self.hover = true
+      else
+         self.hover = false
       end
-      if(self.audio ~= nil) then self.audio:play() end
-      self.active = true
-   else
-      self.active = false
+
+      if self.hover and mouseClicked then
+         if(self.clickHandler ~= nil) then
+            self.clickHandler()
+         end
+         if(self.audio ~= nil) then self.audio:play() end
+         self.active = true
+      else
+         self.active = false
+      end
    end
 end
 
