@@ -5,6 +5,10 @@ Node = class('Node')
 
 function Node:initialize(params)
 
+   self.x = 0
+   self.y = 0
+   self.visible = true
+
    if(self.defaults ~= nil) then
       for k,v in pairs(self.defaults) do 
          self[k] = v
@@ -17,43 +21,68 @@ function Node:initialize(params)
       end
    end
 
-   -- is the node rendered?
-   self.visible = true
-
-   -- position relative to the parent node
-   self.position = { x = 0, y = 0 }
-
-   -- nodes with higher z-index are rendered on top
-   self.z = 0
-
    -- table of child nodes
    self.children = {}
 end
 
 function Node:addChild(newChild)
+   newChild.parentNode = self
    table.insert(self.children, newChild)
 end
 
 function Node:removeChild(index)
+   self.children[index].parentNode = nil
    table.remove(self.children, index)
 end
 
 function Node:update()
-   _.each(self.children, function(key, val)
-      val:update()
-   end)
+   if(self.visible) then
+      _.each(self.children, function(key, val)
+         val:update()
+      end)
+   end
 end
 
 function Node:draw()
-   if(self.image ~= nil) then
-      love.graphics.draw(self.image, love.graphics.getWidth() / 2, love.graphics.getHeight() / 2, 0, 1, 1, 512, 256)
-   end
+   if(self.visible) then
+      if(self.image ~= nil) then
+         love.graphics.draw(self.image, love.graphics.getWidth() / 2, love.graphics.getHeight() / 2, 0, 1, 1, 512, 256)
+      end
 
-   _.each(self.children, function(key, val)
-      val:draw()
-   end)
+      _.each(self.children, function(key, val)
+         val:draw()
+      end)
+   end
 end
 
 function Node:setImage(path)
    self.image = love.graphics.newImage(path)
+end
+
+function Node:show()
+   self.visible = true
+end
+
+function Node:hide()
+   self.visible = false
+end
+
+function Node:getX()
+   x = self.x
+   p = self.parentNode
+   while(p ~= nil) do
+      x = x + p.x
+      p = p.parentNode
+   end
+   return x
+end
+
+function Node:getY()
+   y = self.y
+   p = self.parentNode
+   while(p ~= nil) do
+      y = y + p.y
+      p = p.parentNode
+   end
+   return y
 end

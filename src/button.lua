@@ -19,11 +19,12 @@ function Button:initialize(params)
    Node.initialize(self, params)
 
    self.hover = false
+   self.clickable = false
 end
 
 function Button:update(dt)
    mx, my = love.mouse.getPosition()
-   if mx >= self.x and mx <= self.x + self.width and my >= self.y and my <= self.y + self.height then
+   if mx >= self:getX() and mx <= self:getX() + self.width and my >= self:getY() and my <= self:getY() + self.height then
       self.hover = true
    else
       self.hover = false
@@ -49,13 +50,13 @@ function Button:draw()
    else
       love.graphics.setColor(self.backgroundColor)
    end
-   love.graphics.rectangle("fill", self.x, self.y, self.width, self.height)
+   love.graphics.rectangle("fill", self:getX(), self:getY(), self.width, self.height)
    if self.hover then
       love.graphics.setColor(self.hoverTextColor)
    else
       love.graphics.setColor(self.textColor)
    end
-   love.graphics.printf(self.text, self.x, self.y + 10, self.width, 'center')
+   love.graphics.printf(self.text, self:getX(), self:getY() + 10, self.width, 'center')
 end
 
 function Button:setClickHandler(handler)

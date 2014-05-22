@@ -28,10 +28,10 @@ function love.load()
 
    -- this is the main stage - root of all views
    stage = View:new()
+   stage:setImage("media/images/green.png")
 
    -- main menu
    mainMenu = View:new()
-   mainMenu:setImage("media/images/green.png")
 
    -- sample label
    label = Label:new({y = 100})
@@ -42,11 +42,35 @@ function love.load()
                           x = 10,
                           y = 10 })
    button:setClickHandler(function()
-      label:setText('Button was clicked')
+      --label:setText('Button was clicked')
+      mainMenu:hide()
+      gameView:show()
    end)
    mainMenu:addChild(button)
 
    stage:addChild(mainMenu)
+
+
+   -- another view
+   gameView = View:new()
+   gameView:hide()
+   testNode = Node:new({x = 50, y = 50})
+   button2 = Button:new({ text = 'Test2',
+                          x = 310,
+                          y = 10 })
+   button2:setClickHandler(function()
+      mainMenu:show()
+      gameView:hide()
+      --label:setText('Button2 was clicked')
+   end)
+   testNode:addChild(button2)
+   gameView:addChild(testNode)
+
+   -- sample label
+   label2 = Label:new({x = 310, y = 100})
+   testNode:addChild(label2)
+
+   stage:addChild(gameView)
 
 end
 

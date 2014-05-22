@@ -19,7 +19,7 @@ function Label:draw()
    Node.draw(self)
    love.graphics.setColor(self.color)
    love.graphics.setFont(self.font)
-   love.graphics.printf(self.text, self.x, self.y, self.width, self.align)
+   love.graphics.printf(self.text, self:getX(), self:getY(), self.width, self.align)
 end
 
 function Label:setText(text)
