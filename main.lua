@@ -53,7 +53,6 @@ function love.load()
    -- another view
    gameView = View:new()
    gameView:hide()
-   testNode = Node:new({x = -200, y = -20})
    button2 = Button:new({ text = 'Test2',
                           x = 310,
                           y = 30 })
@@ -62,12 +61,11 @@ function love.load()
       gameView:hide()
       --label:setText('Button2 was clicked')
    end)
-   testNode:addChild(button2)
-   gameView:addChild(testNode)
+   gameView:addChild(button2)
 
    -- sample label
    label2 = Title:new({x = 310, y = 100, text = 'Title'})
-   testNode:addChild(label2)
+   gameView:addChild(label2)
 
    stage:addChild(gameView)
 
