@@ -52,6 +52,7 @@ end
 function Node:draw()
    if(self.visible) then
       if(self.image ~= nil) then
+         love.graphics.setColor({255,255,255,255})
          love.graphics.draw(self.image, love.graphics.getWidth() / 2, love.graphics.getHeight() / 2, 0, 1, 1, 512, 256)
       end
 
