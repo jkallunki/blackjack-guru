@@ -5,8 +5,8 @@ function Button:initialize(params)
    self.defaults = { backgroundColor = {0,0,0,255},
                      hoverBackgroundColor = {24,24,24,255},
                      activeBackgroundColor = {127,127,127,255},
-                     textColor = {255,255,255,255},
-                     hoverTextColor = {239,225,153,255},
+                     textColor = {239,225,153,255},
+                     hoverTextColor = {255,255,255,255},
                      activeTextColor = {255,255,255,255},
                      text = 'Button',
                      height = 60,
@@ -14,7 +14,8 @@ function Button:initialize(params)
                      x = 0,
                      y = 0,
                      font = love.graphics.newFont("media/fonts/nunitolight.ttf", 28),
-                     audio = love.audio.newSource("media/audio/click.mp3", "static") }
+                     audio = love.audio.newSource("media/audio/click.mp3", "static"),
+                     textAlign = 'center' }
 
    Node.initialize(self, params)
 
@@ -69,7 +70,7 @@ function Button:draw()
    end
    love.graphics.setLineWidth(2)
    love.graphics.rectangle("line", self:getX()+1, self:getY()+1, self.width-2, self.height-2)
-   love.graphics.printf(self.text, self:getX(), self:getY() + 10, self.width, 'center')
+   love.graphics.printf(self.text, self:getX() + 10, self:getY() + self.height/6, self.width - 20, self.textAlign)
 end
 
 function Button:setClickHandler(handler)

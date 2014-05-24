@@ -35,5 +35,4 @@ function Card:draw()
    love.graphics.setBlendMode('premultiplied')
    love.graphics.draw(self.canvas, self:getX() + 50, self:getY() + 75, self.angle, 1, 1, 50, 75)
    love.graphics.setBlendMode('alpha')
-   self.angle = self.angle + 0.05
 end
