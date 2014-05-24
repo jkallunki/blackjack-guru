@@ -14,21 +14,14 @@ require "src/tutorial-button"
 require "src/label"
 require "src/title"
 require "src/card"
-
 require "src/main-menu"
 require "src/tutorial-menu"
 require "src/game-view"
+require "src/blackjack"
+
 
 function love.load()
    love.window.setMode(640, 480, {resizable=false, fsaa=16})
-
-   -- Utilities.delay(0.5, function()
-   --    loadTween = tween(1, pos, {x = 300, y = 300}, 'linear', function()
-   --       Utilities.delay(0.2, function()
-   --          loadTween2 = tween(1, pos, {x = 200, y = 300}, 'linear')
-   --       end)
-   --    end)
-   -- end)
 
    -- global variable that shows if mouse has been clicked on current tick
    mouseClicked = false
@@ -66,9 +59,7 @@ function love.mousepressed(mx, my, button)
 end
 
 function love.keypressed(key, unicode)
-   -- if key == 'a' then
-   --    label:setText("The A key was pressed.")
-   -- end
+   -- if key == 'a' then label:setText("The A key was pressed.") end
 end
 
 function love.draw()
