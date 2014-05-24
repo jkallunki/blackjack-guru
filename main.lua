@@ -34,8 +34,11 @@ function love.load()
    mainMenu = View:new()
 
    -- sample label
-   mainTitle = Title:new({x = 20, y = 100, text = 'BlackJack Guru', width = 600})
-   mainMenu:addChild(mainTitle)
+   --mainTitle = Title:new({x = 20, y = 100, text = 'BlackJack Guru', width = 600})
+   --mainMenu:addChild(mainTitle)
+   mainMenuLogo = Node:new({x = 192, y = 40, width = 256, height = 128})
+   mainMenuLogo:setImage('media/images/logo.png')
+   mainMenu:addChild(mainMenuLogo)
 
    -- sample button
    tutorialsButton = Button:new({ text = 'Tutorials', x = 220, y = 200 })

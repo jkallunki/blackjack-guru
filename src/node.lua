@@ -53,7 +53,13 @@ function Node:draw()
    if(self.visible) then
       if(self.image ~= nil) then
          love.graphics.setColor({255,255,255,255})
-         love.graphics.draw(self.image, love.graphics.getWidth() / 2, love.graphics.getHeight() / 2, 0, 1, 1, 512, 256)
+         local scaleX = self.width / self.imageWidth
+         local scaleY = self.height / self.imageHeight
+         local offsetX = self.imageWidth / 2
+         local offsetY = self.imageHeight / 2
+         local x = self:getX() + offsetX * scaleX
+         local y = self:getY() + offsetY * scaleY
+         love.graphics.draw(self.image, x, y, 0, scaleX, scaleY, offsetX, offsetY)
       end
 
       _.each(self.children, function(key, val)
@@ -64,6 +70,7 @@ end
 
 function Node:setImage(path)
    self.image = love.graphics.newImage(path)
+   self.imageWidth, self.imageHeight = self.image:getDimensions()
 end
 
 function Node:show()
