@@ -29,4 +29,10 @@ function MainMenu:initialize()
    local quitButton = Button:new({ text = 'Quit', x = 220, y = 340 })
    quitButton:setClickHandler(love.event.quit)
    self:addChild(quitButton)
+
+   -- credits
+   local creditLabel = Label:new({width = 600, x = 20, y = 440, text = 'BlackJack Guru v1.0.0 by Janne Kallunki'})
+   creditLabel.color = {75,118,102,255}
+   creditLabel.font = love.graphics.newFont("media/fonts/nunitolight.ttf", 16)
+   self:addChild(creditLabel)
 end
