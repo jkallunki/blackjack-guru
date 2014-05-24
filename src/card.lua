@@ -33,6 +33,7 @@ end
 
 function Card:draw()
    love.graphics.setBlendMode('premultiplied')
+   love.graphics.setColor({255,255,255,255})
    love.graphics.draw(self.canvas, self:getX() + 50, self:getY() + 75, self.angle, 1, 1, 50, 75)
    love.graphics.setBlendMode('alpha')
 end

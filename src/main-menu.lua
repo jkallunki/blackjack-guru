@@ -35,4 +35,39 @@ function MainMenu:initialize()
    creditLabel.color = {75,118,102,255}
    creditLabel.font = love.graphics.newFont("media/fonts/nunitolight.ttf", 16)
    self:addChild(creditLabel)
+
+   -- cards
+   local card1 = Card:new({x = -110, y = 60, suit = 'spades', value = 'J'})
+   self:addChild(card1)
+   Utilities.delay(0.3, function()
+      loadTween = tween(0.6, card1, {x = 10, angle = 0.4}, 'outCirc', function()
+         --
+      end)
+   end)
+
+   local card2 = Card:new({x = -110, y = 100, suit = 'hearts', value = 'A'})
+   self:addChild(card2)
+   Utilities.delay(0.6, function()
+      loadTween = tween(0.6, card2, {x = 30, angle = 0.8}, 'outCirc', function()
+         --
+      end)
+   end)
+
+   local card3 = Card:new({x = 650, y = 100, suit = 'diamonds', value = 'A'})
+   self:addChild(card3)
+   Utilities.delay(0.9, function()
+      loadTween = tween(0.6, card3, {x = 510, angle = -0.8}, 'outCirc', function()
+         --
+      end)
+   end)
+
+   local card4 = Card:new({x = 650, y = 60, suit = 'clubs', value = 'J'})
+   self:addChild(card4)
+   Utilities.delay(1.2, function()
+      loadTween = tween(0.6, card4, {x = 530, angle = -0.4}, 'outCirc', function()
+         --
+      end)
+   end)
+
+
 end
