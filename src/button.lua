@@ -3,10 +3,10 @@ Button = Node:subclass('Button')
 function Button:initialize(params)
    -- Defaults options
    self.defaults = { backgroundColor = {0,0,0,255},
-                     hoverBackgroundColor = {63,63,63,255},
+                     hoverBackgroundColor = {24,24,24,255},
                      activeBackgroundColor = {127,127,127,255},
                      textColor = {255,255,255,255},
-                     hoverTextColor = {255,255,255,255},
+                     hoverTextColor = {239,225,153,255},
                      activeTextColor = {255,255,255,255},
                      text = 'Button',
                      height = 60,
