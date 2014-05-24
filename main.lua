@@ -13,6 +13,10 @@ require "src/label"
 require "src/title"
 require "src/card"
 
+require "src/main-menu"
+require "src/tutorial-menu"
+require "src/game-view"
+
 function love.load()
    love.window.setMode(640, 480, {resizable=false, fsaa=16})
 
@@ -24,6 +28,7 @@ function love.load()
    --    end)
    -- end)
 
+   -- global variable that shows if mouse has been clicked on current tick
    mouseClicked = false
 
    -- this is the main stage - root of all views
@@ -31,74 +36,17 @@ function love.load()
    stage:setImage("media/images/green.png")
 
    -- main menu
-   mainMenu = View:new()
-
-   -- sample label
-   --mainTitle = Title:new({x = 20, y = 100, text = 'BlackJack Guru', width = 600})
-   --mainMenu:addChild(mainTitle)
-   mainMenuLogo = Node:new({x = 192, y = 40, width = 256, height = 128})
-   mainMenuLogo:setImage('media/images/logo.png')
-   mainMenu:addChild(mainMenuLogo)
-
-   -- sample button
-   tutorialsButton = Button:new({ text = 'Tutorials', x = 220, y = 200 })
-   tutorialsButton:setClickHandler(function()
-      mainMenu:hide()
-      gameView:show()
-   end)
-   mainMenu:addChild(tutorialsButton)
-
-   -- sample button
-   freePlayButton = Button:new({ text = 'Free play', x = 220, y = 270 })
-   freePlayButton:setClickHandler(function()
-      mainMenu:hide()
-      gameView:show()
-   end)
-   mainMenu:addChild(freePlayButton)
-
-
-   quitButton = Button:new({ text = 'Quit', x = 220, y = 340 })
-   quitButton:setClickHandler(love.event.quit)
-   mainMenu:addChild(quitButton)
-
+   mainMenu = MainMenu:new()
    stage:addChild(mainMenu)
 
-
    -- game view
-   gameView = View:new()
+   gameView = GameView:new()
    gameView:hide()
-   button2 = Button:new({ text = 'Back to menu',
-                          x = 10,
-                          y = 10 })
-   button2:setClickHandler(function()
-      mainMenu:show()
-      gameView:hide()
-   end)
-   gameView:addChild(button2)
-
-   -- sample label
-   label2 = Label:new({x = 210, y = 300, text = 'Playing...'})
-   gameView:addChild(label2)
-
-   card = Card:new({x = 50, y = 100, suit = 'spades', value = 'Q'})
-   gameView:addChild(card)
-
-   card = Card:new({x = 195, y = 100, suit = 'hearts', value = '10'})
-   gameView:addChild(card)
-
-   card = Card:new({x = 345, y = 100, suit = 'clubs', value = 'J'})
-   gameView:addChild(card)
-
-   card = Card:new({x = 490, y = 100, suit = 'diamonds', value = 'A'})
-   gameView:addChild(card)
-
    stage:addChild(gameView)
-
 end
 
 function love.update(dt)
    stage:beforeUpdate()
-
    tween.update(dt)
    Utilities.update(dt)
    stage:update()
@@ -111,9 +59,7 @@ function love.mousepressed(mx, my, button)
 end
 
 function love.keypressed(key, unicode)
-   -- if key == 'b' then
-   --    label:setText("The B key was pressed.")
-   -- elseif key == 'a' then
+   -- if key == 'a' then
    --    label:setText("The A key was pressed.")
    -- end
 end
