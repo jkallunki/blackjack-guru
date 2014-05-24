@@ -4,14 +4,8 @@ function GameView:initialize()
    self.defaults = {width = love.window.getWidth(), height = love.window.getHeight()}
    View.initialize(self)
 
-   local button2 = Button:new({ text = 'Back to menu',
-                          x = 10,
-                          y = 10 })
-   button2:setClickHandler(function()
-      mainMenu:show()
-      self:hide()
-   end)
-   self:addChild(button2)
+   local menuButton = MenuButton:new()
+   self:addChild(menuButton)
 
    -- sample label
    local label2 = Label:new({x = 210, y = 300, text = 'Playing...'})

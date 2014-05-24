@@ -9,6 +9,7 @@ require "src/view"
 require "src/blackjack"
 require "src/utilities"
 require "src/button"
+require "src/menu-button"
 require "src/label"
 require "src/title"
 require "src/card"
@@ -36,6 +37,11 @@ function love.load()
    stage:setImage("media/images/green.png")
 
    -- main menu
+   tutorialMenu = TutorialMenu:new()
+   tutorialMenu:hide()
+   stage:addChild(tutorialMenu)
+
+   -- tutorial menu
    mainMenu = MainMenu:new()
    stage:addChild(mainMenu)
 
