@@ -10,6 +10,8 @@ function generateDeck()
    end), true)
 end
 
+-- calculates possible hand values from an array of cards
+-- returns a table containing all possible values e.g {'A','A','2'} => {4,14,24}
 function calculateHandValue(cards)
    return _.reduce(cards, function(total, card)
       local value = card.value
@@ -18,14 +20,13 @@ function calculateHandValue(cards)
       elseif value == 'A' then
          value = 1
       end
-      total = _.map(total, function(k,v) 
-         return v + value
-      end)
-      if card.value == 'A' then
-         total = _.uniq(_.flatten(_.map(total, function(k,v)
-            return {v, v+10}
-         end)))
-      end
+      total = _.uniq(_.flatten(_.map(total, function(k,v)
+         if card.value == 'A' then
+            return {v + 1, v + 11}
+         else
+            return v + value
+         end
+      end)))
       return total
    end, {0})
 end
