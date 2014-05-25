@@ -8,9 +8,13 @@ function GameView:initialize()
    self:addChild(menuButton)
 
    -- small logo
-   local smallLogo = Node:new({x = 490, y = 14, width = 128, height = 64})
+   local smallLogo = Node:new({x = 490, y = 6, width = 128, height = 64})
    smallLogo:setImage('media/images/logo.png')
    self:addChild(smallLogo)
+
+   -- game title
+   local gameTitle = Title:new({x = 20, y = 1, text = 'Free play', width = 600})
+   self:addChild(gameTitle)
 
    -- sample label
    local label2 = Label:new({x = 210, y = 300, text = 'Playing...'})

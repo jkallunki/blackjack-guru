@@ -1,8 +1,8 @@
 Round = class('Round')
 
 function Round:initialize(params)
-	dealerCards = {}
-	playerCards = {}
+	self.dealerCards = {}
+	self.playerCards = {}
 end
 
 
