@@ -1,5 +1,6 @@
+-- HELPER METHODS
 
-
+-- generate array containing all 52 cards (not shuffled!)
 function generateDeck()
    local suits = {'hearts', 'spades', 'diamonds', 'clubs' }
    local values = {2,3,4,5,6,7,8,9,10,'J','Q','K','A'}
@@ -21,6 +22,9 @@ function calculateHandValue(cards)
    end, {0})
 end
 
+
+-- SINGLE ROUND
+
 Round = class('Round')
 
 function Round:initialize(params)
@@ -40,12 +44,6 @@ end
 function Round:hit()
    local drawnCard = _.pop(self.deck)
    _.push(self.playerCards, drawnCard)
-
-
-   local values = calculateHandValue(self.playerCards)
-   _.each(values, function(k,v)
-      print(v)
-   end)
    return drawnCard
 end
 
@@ -73,8 +71,12 @@ function Round:evenMoney()
 
 end
 
--- 
+-- round helper methods
 
 function Round:getPlayerTotal()
+   return calculateHandValue(self.playerCards)
+end
 
+function Round:getDealerTotal()
+   return calculateHandValue(self.dealerCards)
 end

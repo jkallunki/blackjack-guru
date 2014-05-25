@@ -16,9 +16,9 @@ function GameView:initialize()
    local gameTitle = Title:new({x = 20, y = 1, text = 'Free play', width = 600})
    self:addChild(gameTitle)
 
-   -- sample label
-   -- local label2 = Label:new({x = 210, y = 300, text = 'Playing...'})
-   -- self:addChild(label2)
+   -- player hand total value
+   self.playerTotalLabel = Label:new({x = 410, y = 300, align = 'right', text = ''})
+   self:addChild(self.playerTotalLabel)
 
    self.currentRound = Round:new()
 
@@ -54,10 +54,12 @@ function GameView:startRound(bet)
    self.dealerCards:addCard(self.currentRound.dealerCards[1])
    self.betButton:hide()
    self.hitButton:show()
+   self.playerTotalLabel.text = self:getPlayerTotalString()
 end
 
 function GameView:hit()
    self.playerCards:addCard(self.currentRound:hit())
+   self.playerTotalLabel.text = self:getPlayerTotalString()
 end
 
 function GameView:show()
@@ -67,4 +69,8 @@ function GameView:show()
    self.playerCards:empty()
    self.betButton:show()
    self.hitButton:hide()
+end
+
+function GameView:getPlayerTotalString()
+   return table.concat(self.currentRound:getPlayerTotal(), ', ')
 end
