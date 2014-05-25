@@ -54,23 +54,25 @@ function Button:update(dt)
 end
 
 function Button:draw()
-   love.graphics.setFont(self.font)
-   if self.active then
-      love.graphics.setColor(self.activeBackgroundColor)
-   elseif self.hover then
-      love.graphics.setColor(self.hoverBackgroundColor)
-   else
-      love.graphics.setColor(self.backgroundColor)
+   if self.visible then
+      love.graphics.setFont(self.font)
+      if self.active then
+         love.graphics.setColor(self.activeBackgroundColor)
+      elseif self.hover then
+         love.graphics.setColor(self.hoverBackgroundColor)
+      else
+         love.graphics.setColor(self.backgroundColor)
+      end
+      love.graphics.rectangle("fill", self:getX(), self:getY(), self.width, self.height)
+      if self.hover then
+         love.graphics.setColor(self.hoverTextColor)
+      else
+         love.graphics.setColor(self.textColor)
+      end
+      love.graphics.setLineWidth(2)
+      love.graphics.rectangle("line", self:getX()+1, self:getY()+1, self.width-2, self.height-2)
+      love.graphics.printf(self.text, self:getX() + 15, self:getY() + self.height/6, self.width - 30, self.textAlign)
    end
-   love.graphics.rectangle("fill", self:getX(), self:getY(), self.width, self.height)
-   if self.hover then
-      love.graphics.setColor(self.hoverTextColor)
-   else
-      love.graphics.setColor(self.textColor)
-   end
-   love.graphics.setLineWidth(2)
-   love.graphics.rectangle("line", self:getX()+1, self:getY()+1, self.width-2, self.height-2)
-   love.graphics.printf(self.text, self:getX() + 15, self:getY() + self.height/6, self.width - 30, self.textAlign)
 end
 
 function Button:setClickHandler(handler)

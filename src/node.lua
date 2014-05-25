@@ -35,6 +35,12 @@ function Node:removeChild(index)
    table.remove(self.children, index)
 end
 
+function Node:removeAllChildren()
+   for k in pairs (self.children) do
+      self.children[k] = nil
+   end
+end
+
 function Node:beforeUpdate()
    _.each(self.children, function(key, val)
       val:beforeUpdate()
@@ -102,6 +108,7 @@ function Node:getY()
 end
 
 function Node:isVisible()
+   if not self.visible then return false end
    p = self.parentNode
    while(p ~= nil) do
       if not p.visible then
