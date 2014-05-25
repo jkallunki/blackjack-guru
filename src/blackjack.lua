@@ -14,16 +14,10 @@ end
 -- returns a table containing all possible values e.g {'A','A','2'} => {4,14,24}
 function calculateHandValue(cards)
    return _.reduce(cards, function(total, card)
-      local value = card.value
-      if _.detect({'J','Q','K'}, value) then
-         value = 10
-      elseif value == 'A' then
-         value = 1
-      end
-      total = _.sort(_.uniq(_.flatten(_.map(total, function(k,v)
-         return card.value == 'A' and {v + 1, v + 11} or v + value
-      end))))
-      return total
+      local value = _.detect({'J','Q','K'}, card.value) and 10 or card.value
+      return _.uniq(_.flatten(_.map(total, function(k,v)
+         return value == 'A' and {v + 1, v + 11} or v + value
+      end)))
    end, {0})
 end
 
