@@ -20,13 +20,9 @@ function calculateHandValue(cards)
       elseif value == 'A' then
          value = 1
       end
-      total = _.uniq(_.flatten(_.map(total, function(k,v)
-         if card.value == 'A' then
-            return {v + 1, v + 11}
-         else
-            return v + value
-         end
-      end)))
+      total = _.sort(_.uniq(_.flatten(_.map(total, function(k,v)
+         return card.value == 'A' and {v + 1, v + 11} or v + value
+      end))))
       return total
    end, {0})
 end
