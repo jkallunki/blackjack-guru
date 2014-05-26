@@ -114,6 +114,7 @@ function GameView:reset()
    self.playerCards:empty()
    self.betButton:show()
    self.hitButton:hide()
+   self.standButton:hide()
    self.playerTotalLabel.text = ''
    self.dealerTotalLabel.text = ''
 end
