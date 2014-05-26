@@ -11,17 +11,29 @@ function generateDeck()
    end), true)
 end
 
+-- get real numeric value of a card
+-- ('A' == 11 if aceHigh == true, otherwise 'A' == 1)
+function cardValue(cardOrValue, aceHigh)
+   aceHigh = aceHigh or false
+   value = (type(cardOrValue) == 'table') and cardOrValue.value or cardOrValue
+   if value == 'A' then
+      value = aceHigh and 11 or 1
+   else
+      value = _.detect({'J','Q','K'}, value) and 10 or value
+   end
+   return value
+end
+
 -- calculates possible hand values from an array of cards
 -- returns a table containing all possible values e.g {'A','A','2'} => {4,14,24}
 function calculateHandValue(cards)
    return _.reduce(cards, function(total, card)
       local value = _.detect({'J','Q','K'}, card.value) and 10 or card.value
-      return _.uniq(_.flatten(_.map(total, function(k,v)
+      return _.sort(_.uniq(_.flatten(_.map(total, function(k,v)
          return value == 'A' and {v + 1, v + 11} or v + value
-      end)))
+      end))))
    end, {0})
 end
-
 
 -- SINGLE ROUND
 
@@ -79,4 +91,18 @@ end
 
 function Round:getDealerTotal()
    return calculateHandValue(self.dealerCards)
+end
+
+function Round:isBlackjack(cards)
+   return _.size(cards) == 2 and _.reduce(cards, function(state, card)
+      return state + cardValue(card, true)
+   end, 0) == 21
+end
+
+function Round:playerHasBlackjack()
+   return self:isBlackjack(self.playerCards)
+end
+
+function Round:dealerHasBlackjack()
+   return self:isBlackjack(self.dealerCards)
 end

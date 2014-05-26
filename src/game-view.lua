@@ -64,13 +64,29 @@ end
 
 function GameView:show()
    Node.show(self)
+   self:reset()
+end
+
+function GameView:reset()
    self.currentRound = Round:new()
    self.dealerCards:empty()
    self.playerCards:empty()
    self.betButton:show()
    self.hitButton:hide()
+   self.playerTotalLabel.text = ''
 end
 
 function GameView:getPlayerTotalString()
-   return table.concat(self.currentRound:getPlayerTotal(), ', ')
+   -- drop out invalid values (>21)
+   local totals = self.currentRound:getPlayerTotal()
+   local minTotals = _.min(totals)
+   if self.currentRound:playerHasBlackjack() then
+      return 'Blackjack (21)'
+   elseif minTotals <= 21 then
+      return table.concat(_.select(totals, function(k, v)
+         return v <= 21
+      end), '/')
+   else
+      return 'Bust (' .. minTotals .. ')'
+   end
 end
