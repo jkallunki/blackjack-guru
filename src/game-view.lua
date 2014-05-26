@@ -20,7 +20,10 @@ function GameView:initialize()
    self.playerTotalLabel = Label:new({x = 410, y = 300, align = 'right', text = ''})
    self:addChild(self.playerTotalLabel)
 
-   self.currentRound = Round:new()
+
+   -- player hand total value
+   self.dealerTotalLabel = Label:new({x = 410, y = 140, align = 'right', text = ''})
+   self:addChild(self.dealerTotalLabel)
 
    -- bet button
    self.betButton = Button:new({ text = 'Bet 10', x = 220, y = 400 })
@@ -29,13 +32,19 @@ function GameView:initialize()
    end)
    self:addChild(self.betButton)
 
-   -- bet button
+   -- hit button
    self.hitButton = Button:new({ text = 'Hit', x = 220, y = 400, visible = false })
    self.hitButton:setClickHandler(function()
       self:hit()
    end)
    self:addChild(self.hitButton)
 
+   -- stand button
+   self.standButton = Button:new({ text = 'Stand', x = 430, y = 400, visible = false })
+   self.standButton:setClickHandler(function()
+      self:stand()
+   end)
+   self:addChild(self.standButton)
 
    -- dealer's cards on table
    self.dealerCards = CardGroup:new({x = 20, y = 70})
@@ -47,6 +56,11 @@ function GameView:initialize()
 end
 
 function GameView:startRound(bet)
+   self.currentRound = Round:new()
+
+   self.playerCards:empty()
+   self.dealerCards:empty()
+
    self.currentRound:start(10)
    for k,card in pairs(self.currentRound.playerCards) do
       self.playerCards:addCard(card)
@@ -54,12 +68,40 @@ function GameView:startRound(bet)
    self.dealerCards:addCard(self.currentRound.dealerCards[1])
    self.betButton:hide()
    self.hitButton:show()
+   self.standButton:show()
    self.playerTotalLabel.text = self:getPlayerTotalString()
+   self.dealerTotalLabel.text = self:getDealerTotalString()
 end
 
 function GameView:hit()
    self.playerCards:addCard(self.currentRound:hit())
    self.playerTotalLabel.text = self:getPlayerTotalString()
+   local dealerCards = nil
+   -- TODO: handle this in logic component
+   if self.currentRound:playerIsBusted() then
+      dealerCards = self.currentRound:dealerTurn()
+      _.each(dealerCards, function(k, card)
+         self.dealerCards:addCard(card)
+      end)
+      self.dealerTotalLabel.text = self:getDealerTotalString()
+
+      self.hitButton:hide()
+      self.standButton:hide()
+      self.betButton:show()
+   end
+end
+
+function GameView:stand()
+   -- TODO: handle this in logic component
+   dealerCards = self.currentRound:dealerTurn()
+   _.each(dealerCards, function(k, card)
+      self.dealerCards:addCard(card)
+   end)
+   self.dealerTotalLabel.text = self:getDealerTotalString()
+
+   self.hitButton:hide()
+   self.standButton:hide()
+   self.betButton:show()
 end
 
 function GameView:show()
@@ -68,19 +110,35 @@ function GameView:show()
 end
 
 function GameView:reset()
-   self.currentRound = Round:new()
    self.dealerCards:empty()
    self.playerCards:empty()
    self.betButton:show()
    self.hitButton:hide()
    self.playerTotalLabel.text = ''
+   self.dealerTotalLabel.text = ''
 end
 
+-- TODO: DRY these methods
 function GameView:getPlayerTotalString()
    -- drop out invalid values (>21)
    local totals = self.currentRound:getPlayerTotal()
    local minTotals = _.min(totals)
    if self.currentRound:playerHasBlackjack() then
+      return 'Blackjack (21)'
+   elseif minTotals <= 21 then
+      return table.concat(_.select(totals, function(k, v)
+         return v <= 21
+      end), '/')
+   else
+      return 'Bust (' .. minTotals .. ')'
+   end
+end
+
+function GameView:getDealerTotalString()
+   -- drop out invalid values (>21)
+   local totals = self.currentRound:getDealerTotal()
+   local minTotals = _.min(totals)
+   if self.currentRound:dealerHasBlackjack() then
       return 'Blackjack (21)'
    elseif minTotals <= 21 then
       return table.concat(_.select(totals, function(k, v)

@@ -85,8 +85,32 @@ end
 
 -- round helper methods
 
+function Round:dealerTurn()
+   local drawnCards = {}
+   local drawnCard = nil
+   while self:dealerShouldDraw() do
+      drawnCard = _.pop(self.deck)
+      print(drawnCard.value)
+      _.push(drawnCards, drawnCard)
+      _.push(self.dealerCards, drawnCard)
+   end
+   print('--')
+   return drawnCards
+end
+
+function Round:getDealerTurnCards()
+   return _.tail(self.dealerCards)
+end
+
 function Round:getPlayerTotal()
    return calculateHandValue(self.playerCards)
+end
+
+function Round:dealerShouldDraw()
+   local maxValidTotal = _.max(_.select(self:getDealerTotal(), function(k,v)
+      return v <= 21
+   end))
+   return maxValidTotal ~= nil and maxValidTotal < 17
 end
 
 function Round:getDealerTotal()
@@ -105,4 +129,8 @@ end
 
 function Round:dealerHasBlackjack()
    return self:isBlackjack(self.dealerCards)
+end
+
+function Round:playerIsBusted()
+   return _.min(calculateHandValue(self.playerCards)) > 21
 end
