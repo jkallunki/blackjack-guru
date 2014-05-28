@@ -62,10 +62,9 @@ function GameView:startRound(bet)
    self.dealerCards:empty()
 
    self.currentRound:start(10)
-   for k,card in pairs(self.currentRound.playerCards) do
-      self.playerCards:addCard(card)
-   end
-   self.dealerCards:addCard(self.currentRound.dealerCards[1], 0.2)
+   self.playerCards:addCard(self.currentRound.playerCards[1], 0)
+   self.playerCards:addCard(self.currentRound.playerCards[2], 0.2)
+   self.dealerCards:addCard(self.currentRound.dealerCards[1], 0.6)
    self.betButton:hide()
    self.hitButton:show()
    self.standButton:show()
@@ -92,12 +91,10 @@ function GameView:stand()
 end
 
 function GameView:dealerTurn()
-   -- TODO: handle this in logic component
-   dealerCards = self.currentRound:dealerTurn()
-   _.each(dealerCards, function(k, card)
+   self.currentRound:dealerTurn(0.6, function(card)
       self.dealerCards:addCard(card)
+      self.dealerTotalLabel.text = self:getDealerTotalString()
    end)
-   self.dealerTotalLabel.text = self:getDealerTotalString()
 
    self.hitButton:hide()
    self.standButton:hide()

@@ -85,17 +85,19 @@ end
 
 -- round helper methods
 
-function Round:dealerTurn()
-   local drawnCards = {}
+function Round:dealerTurn(interval, afterCard, finally)
    local drawnCard = nil
-   while self:dealerShouldDraw() do
-      drawnCard = _.pop(self.deck)
-      print(drawnCard.value)
-      _.push(drawnCards, drawnCard)
-      _.push(self.dealerCards, drawnCard)
+   interval = interval or 0
+   if self:dealerShouldDraw() then
+      Utilities.delay(interval, function()
+         drawnCard = _.pop(self.deck)
+         _.push(self.dealerCards, drawnCard)
+         afterCard(drawnCard)
+         self:dealerTurn(interval, afterCard, finally)
+      end)
+   elseif finally ~= nil then
+      finally()
    end
-   print('--')
-   return drawnCards
 end
 
 function Round:getDealerTurnCards()
