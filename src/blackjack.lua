@@ -106,10 +106,25 @@ function Round:getPlayerTotal()
    return calculateHandValue(self.playerCards)
 end
 
-function Round:dealerShouldDraw()
-   local maxValidTotal = _.max(_.select(self:getDealerTotal(), function(k,v)
+function Round:maxValidDealerTotal()
+   return _.max(_.select(self:getDealerTotal(), function(k,v)
       return v <= 21
    end))
+end
+
+function Round:maxValidPlayerTotal()
+   return _.max(_.select(self:getPlayerTotal(), function(k,v)
+      return v <= 21
+   end))
+end
+
+function Round:playerShouldStand()
+   local maxValidTotal = self:maxValidPlayerTotal()
+   return maxValidTotal ~= nil and maxValidTotal == 21
+end
+
+function Round:dealerShouldDraw()
+   local maxValidTotal = self:maxValidDealerTotal()
    return maxValidTotal ~= nil and maxValidTotal < 17
 end
 
