@@ -72,7 +72,10 @@ function GameView:startRound(bet)
    self.dealerTotalLabel.text = self:getDealerTotalString()
 
    if self.currentRound:playerHasBlackjack() then
-      self:dealerTurn()
+      self.hitButton:hide()
+      Utilities.delay(0.5, function()
+         self.dealerTurn()
+      end)
    end
 end
 
@@ -94,11 +97,12 @@ function GameView:dealerTurn()
    self.currentRound:dealerTurn(0.6, function(card)
       self.dealerCards:addCard(card)
       self.dealerTotalLabel.text = self:getDealerTotalString()
+   end, function()
+      self.betButton:show()
    end)
 
    self.hitButton:hide()
    self.standButton:hide()
-   self.betButton:show()
 end
 
 function GameView:show()
