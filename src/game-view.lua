@@ -65,7 +65,7 @@ function GameView:startRound(bet)
    for k,card in pairs(self.currentRound.playerCards) do
       self.playerCards:addCard(card)
    end
-   self.dealerCards:addCard(self.currentRound.dealerCards[1])
+   self.dealerCards:addCard(self.currentRound.dealerCards[1], 0.2)
    self.betButton:hide()
    self.hitButton:show()
    self.standButton:show()
