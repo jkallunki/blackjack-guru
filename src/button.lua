@@ -29,6 +29,7 @@ function Button:beforeUpdate()
 end
 
 function Button:update(dt)
+   self.active = false
    if(self.clickable) then
       mx, my = love.mouse.getPosition()
       if mx >= self:getX() and 
@@ -47,8 +48,6 @@ function Button:update(dt)
          end
          if(self.audio ~= nil) then self.audio:play() end
          self.active = true
-      else
-         self.active = false
       end
    end
 end

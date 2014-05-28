@@ -96,7 +96,7 @@ function Round:dealerTurn(interval, afterCard, finally)
          self:dealerTurn(interval, afterCard, finally)
       end)
    elseif finally ~= nil then
-      finally()
+      Utilities.delay(interval, finally)
    end
 end
 

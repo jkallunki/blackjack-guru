@@ -60,28 +60,33 @@ function GameView:startRound(bet)
 
    self.playerCards:empty()
    self.dealerCards:empty()
+   self.playerTotalLabel.text = ''
+   self.dealerTotalLabel.text = ''
 
    self.currentRound:start(10)
    self.playerCards:addCard(self.currentRound.playerCards[1], 0)
-   self.playerCards:addCard(self.currentRound.playerCards[2], 0.2)
-   self.dealerCards:addCard(self.currentRound.dealerCards[1], 0.6)
+   self.playerCards:addCard(self.currentRound.playerCards[2], 0.2, function()
+      self.playerTotalLabel.text = self:getPlayerTotalString()
+   end)
+   self.dealerCards:addCard(self.currentRound.dealerCards[1], 0.6, function()
+      self.dealerTotalLabel.text = self:getDealerTotalString()
+   end)
    self.betButton:hide()
    self.hitButton:show()
    self.standButton:show()
-   self.playerTotalLabel.text = self:getPlayerTotalString()
-   self.dealerTotalLabel.text = self:getDealerTotalString()
 
    if self.currentRound:playerHasBlackjack() then
       self.hitButton:hide()
       Utilities.delay(0.5, function()
-         self.dealerTurn()
+         self:dealerTurn()
       end)
    end
 end
 
 function GameView:hit()
-   self.playerCards:addCard(self.currentRound:hit())
-   self.playerTotalLabel.text = self:getPlayerTotalString()
+   self.playerCards:addCard(self.currentRound:hit(), 0, function()
+      self.playerTotalLabel.text = self:getPlayerTotalString()
+   end)
    local dealerCards = nil
    -- TODO: handle this in logic component
    if self.currentRound:playerIsBusted() or self.currentRound:playerShouldStand() then
@@ -95,8 +100,9 @@ end
 
 function GameView:dealerTurn()
    self.currentRound:dealerTurn(0.6, function(card)
-      self.dealerCards:addCard(card)
-      self.dealerTotalLabel.text = self:getDealerTotalString()
+      self.dealerCards:addCard(card, 0, function()
+         self.dealerTotalLabel.text = self:getDealerTotalString()
+      end)
    end, function()
       self.betButton:show()
    end)
