@@ -33,25 +33,58 @@ function GameView:initialize()
    self:addChild(self.betButton)
 
    -- hit button
-   self.hitButton = Button:new({ text = 'Hit', x = 220, y = 400, visible = false })
+   self.hitButton = GameButton:new({ text = 'Hit', x = 240, y = 370, visible = false, width = 160})
    self.hitButton:setClickHandler(function()
       self:hit()
    end)
    self:addChild(self.hitButton)
 
    -- stand button
-   self.standButton = Button:new({ text = 'Stand', x = 430, y = 400, visible = false })
+   self.standButton = GameButton:new({ text = 'Stand', x = 405, y = 370, visible = false, width = 160 })
    self.standButton:setClickHandler(function()
       self:stand()
    end)
    self:addChild(self.standButton)
+
+
+
+   -- double button
+   self.doubleButton = GameButton:new({ text = 'Double', x = 240, y = 425, visible = true, width = 160 })
+   self.doubleButton:setClickHandler(function()
+      --
+   end)
+   self:addChild(self.doubleButton)
+
+   -- split button
+   self.splitButton = GameButton:new({ text = 'Split', x = 405, y = 425, visible = true, width = 160 })
+   self.splitButton:setClickHandler(function()
+      --
+   end)
+   self:addChild(self.splitButton)
+
+
+   -- surrender button
+   self.surrenderButton = GameButton:new({ text = 'Surrender', x = 75, y = 370, visible = true, width = 160 })
+   self.surrenderButton:setClickHandler(function()
+      --
+   end)
+   self:addChild(self.surrenderButton)
+
+   -- insurance button
+   self.insuranceButton = GameButton:new({ text = 'Insurance', x = 75, y = 425, visible = true, width = 160 })
+   self.insuranceButton:setClickHandler(function()
+      --
+   end)
+   self:addChild(self.insuranceButton)
+
+
 
    -- dealer's cards on table
    self.dealerCards = CardGroup:new({x = 20, y = 70})
    self:addChild(self.dealerCards)
 
    -- player's cards on table
-   self.playerCards = CardGroup:new({x = 20, y = 230})
+   self.playerCards = CardGroup:new({x = 20, y = 220})
    self:addChild(self.playerCards)
 end
 
@@ -63,6 +96,8 @@ function GameView:startRound(bet)
    self.playerTotalLabel.text = ''
    self.dealerTotalLabel.text = ''
 
+   self.betButton:hide()
+
    self.currentRound:start(10)
    self.playerCards:addCard(self.currentRound.playerCards[1], 0)
    self.playerCards:addCard(self.currentRound.playerCards[2], 0.2, function()
@@ -70,17 +105,14 @@ function GameView:startRound(bet)
    end)
    self.dealerCards:addCard(self.currentRound.dealerCards[1], 0.6, function()
       self.dealerTotalLabel.text = self:getDealerTotalString()
+      if self.currentRound:playerHasBlackjack() then
+         self.hitButton:hide()
+         self:dealerTurn(0.5)
+      else    
+         self.hitButton:show()
+         self.standButton:show()
+      end
    end)
-   self.betButton:hide()
-   self.hitButton:show()
-   self.standButton:show()
-
-   if self.currentRound:playerHasBlackjack() then
-      self.hitButton:hide()
-      Utilities.delay(0.5, function()
-         self:dealerTurn()
-      end)
-   end
 end
 
 function GameView:hit()
@@ -90,7 +122,7 @@ function GameView:hit()
    local dealerCards = nil
    -- TODO: handle this in logic component
    if self.currentRound:playerIsBusted() or self.currentRound:playerShouldStand() then
-      self:dealerTurn()
+      self:dealerTurn(0.5)
    end
 end
 
@@ -98,17 +130,21 @@ function GameView:stand()
    self:dealerTurn()
 end
 
-function GameView:dealerTurn()
-   self.currentRound:dealerTurn(0.6, function(card)
-      self.dealerCards:addCard(card, 0, function()
-         self.dealerTotalLabel.text = self:getDealerTotalString()
-      end)
-   end, function()
-      self.betButton:show()
-   end)
+function GameView:dealerTurn(delay)
+   delay = delay or 0
 
    self.hitButton:hide()
    self.standButton:hide()
+
+   Utilities.delay(delay, function()
+      self.currentRound:dealerTurn(0.6, function(card)
+         self.dealerCards:addCard(card, 0, function()
+            self.dealerTotalLabel.text = self:getDealerTotalString()
+         end)
+      end, function()
+         self.betButton:show()
+      end)
+   end)
 end
 
 function GameView:show()

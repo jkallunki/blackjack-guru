@@ -69,7 +69,7 @@ function Button:draw()
          love.graphics.setColor(self.textColor)
       end
       love.graphics.setLineWidth(2)
-      love.graphics.rectangle("line", self:getX()+1, self:getY()+1, self.width-2, self.height-2)
+      --love.graphics.rectangle("line", self:getX()+1, self:getY()+1, self.width-2, self.height-2)
       love.graphics.printf(self.text, self:getX() + 15, self:getY() + self.height/6, self.width - 30, self.textAlign)
    end
 end
