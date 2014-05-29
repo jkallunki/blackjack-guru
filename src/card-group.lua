@@ -12,7 +12,7 @@ function CardGroup:addCard(card, delay, callback)
    self.cardAmount = self.cardAmount + 1
 
    Utilities.delay(delay, function()
-      loadTween = tween(0.4, newCard, {y = 0, angle = 0}, 'outCirc', callback)
+      local cardTween = tween(0.4, newCard, {y = 0, angle = 0}, 'outCirc', callback)
    end)
 end
 

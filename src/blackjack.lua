@@ -151,3 +151,9 @@ end
 function Round:playerIsBusted()
    return _.min(calculateHandValue(self.playerCards)) > 21
 end
+
+function Round:playerCanDouble()
+   return not _.isEmpty(_.select(self:getPlayerTotal(), function(k,v)
+      return 9 <= v and v <= 11
+   end))
+end

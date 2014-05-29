@@ -49,14 +49,14 @@ function GameView:initialize()
 
 
    -- double button
-   self.doubleButton = GameButton:new({ text = 'Double', x = 240, y = 425, visible = true, width = 160 })
+   self.doubleButton = GameButton:new({ text = 'Double', x = 240, y = 425, visible = false, width = 160 })
    self.doubleButton:setClickHandler(function()
-      --
+      self:double()
    end)
    self:addChild(self.doubleButton)
 
    -- split button
-   self.splitButton = GameButton:new({ text = 'Split', x = 405, y = 425, visible = true, width = 160 })
+   self.splitButton = GameButton:new({ text = 'Split', x = 405, y = 425, visible = false, width = 160 })
    self.splitButton:setClickHandler(function()
       --
    end)
@@ -64,14 +64,14 @@ function GameView:initialize()
 
 
    -- surrender button
-   self.surrenderButton = GameButton:new({ text = 'Surrender', x = 75, y = 370, visible = true, width = 160 })
+   self.surrenderButton = GameButton:new({ text = 'Surrender', x = 75, y = 370, visible = false, width = 160 })
    self.surrenderButton:setClickHandler(function()
       --
    end)
    self:addChild(self.surrenderButton)
 
    -- insurance button
-   self.insuranceButton = GameButton:new({ text = 'Insurance', x = 75, y = 425, visible = true, width = 160 })
+   self.insuranceButton = GameButton:new({ text = 'Insurance', x = 75, y = 425, visible = false, width = 160 })
    self.insuranceButton:setClickHandler(function()
       --
    end)
@@ -111,15 +111,18 @@ function GameView:startRound(bet)
       else    
          self.hitButton:show()
          self.standButton:show()
+         if self.currentRound:playerCanDouble() then
+            self.doubleButton:show()
+         end
       end
    end)
 end
 
 function GameView:hit()
+   self.doubleButton:hide()
    self.playerCards:addCard(self.currentRound:hit(), 0, function()
       self.playerTotalLabel.text = self:getPlayerTotalString()
    end)
-   local dealerCards = nil
    -- TODO: handle this in logic component
    if self.currentRound:playerIsBusted() or self.currentRound:playerShouldStand() then
       self:dealerTurn(0.5)
@@ -130,11 +133,20 @@ function GameView:stand()
    self:dealerTurn()
 end
 
+function GameView:double()
+   self.doubleButton:hide()
+   self.playerCards:addCard(self.currentRound:hit(), 0, function()
+      self.playerTotalLabel.text = self:getPlayerTotalString()
+      self:dealerTurn(0.5)
+   end)
+end
+
 function GameView:dealerTurn(delay)
    delay = delay or 0
 
    self.hitButton:hide()
    self.standButton:hide()
+   self.doubleButton:hide()
 
    Utilities.delay(delay, function()
       self.currentRound:dealerTurn(0.6, function(card)
