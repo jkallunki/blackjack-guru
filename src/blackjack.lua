@@ -157,3 +157,8 @@ function Round:playerCanDouble()
       return 9 <= v and v <= 11
    end))
 end
+
+function Round:playerCanSplit()
+   local cards = self.playerCards
+   return _.size(cards) == 2 and cards[1].value == cards[2].value
+end

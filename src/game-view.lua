@@ -58,7 +58,7 @@ function GameView:initialize()
    -- split button
    self.splitButton = GameButton:new({ text = 'Split', x = 405, y = 425, visible = false, width = 160 })
    self.splitButton:setClickHandler(function()
-      --
+      self:split()
    end)
    self:addChild(self.splitButton)
 
@@ -114,12 +114,16 @@ function GameView:startRound(bet)
          if self.currentRound:playerCanDouble() then
             self.doubleButton:show()
          end
+         if self.currentRound:playerCanSplit() then
+            self.splitButton:show()
+         end
       end
    end)
 end
 
 function GameView:hit()
    self.doubleButton:hide()
+   self.splitButton:hide()
    self.playerCards:addCard(self.currentRound:hit(), 0, function()
       self.playerTotalLabel.text = self:getPlayerTotalString()
    end)
@@ -139,6 +143,10 @@ function GameView:double()
       self.playerTotalLabel.text = self:getPlayerTotalString()
       self:dealerTurn(0.5)
    end)
+end
+
+function GameView:split()
+   self.splitButton:hide()
 end
 
 function GameView:dealerTurn(delay)
