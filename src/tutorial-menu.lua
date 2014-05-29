@@ -8,12 +8,12 @@ function TutorialMenu:initialize()
    self:addChild(menuButton)
 
    -- small logo
-   local smallLogo = Node:new({x = 490, y = 6, width = 128, height = 64})
+   local smallLogo = Node:new({x = 502, y = 5, width = 128, height = 64})
    smallLogo:setImage('media/images/logo.png')
    self:addChild(smallLogo)
 
    -- tutorials title
-   local tutorialsTitle = Title:new({x = 20, y = 1, text = 'Tutorials', width = 600})
+   local tutorialsTitle = Title:new({x = 20, y = 0, text = 'Tutorials', width = 600})
    self:addChild(tutorialsTitle)
 
    -- tutorial launch buttons

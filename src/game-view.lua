@@ -4,15 +4,13 @@ function GameView:initialize()
    self.defaults = {width = love.window.getWidth(), height = love.window.getHeight()}
    View.initialize(self)
 
-
    self.credits = 10000
 
-   self.creditsTitleLabel = Label:new({x = 500, y = 390, align = 'right', text = 'Credits:', width = 130, color = {239,225,153,255}})
+   self.creditsTitleLabel = Label:new({x = 500, y = 377, align = 'right', text = 'Credits:', width = 130, color = {239,225,153,255}})
    self:addChild(self.creditsTitleLabel)
 
-   self.creditsLabel = Title:new({x = 504, y = 413, align = 'right', text = '', width = 130, color = {239,225,153,255}})
+   self.creditsLabel = Title:new({x = 503, y = 402, align = 'right', text = '', width = 130, color = {239,225,153,255}})
    self:addChild(self.creditsLabel)
-
 
    -- player hand total value
    self.playerTotalLabel = Label:new({x = 410, y = 300, align = 'right', text = ''})
@@ -23,7 +21,7 @@ function GameView:initialize()
    self:addChild(self.dealerTotalLabel)
 
    -- bet button
-   self.betButton = Button:new({ text = 'Bet 10', x = 220, y = 407 })
+   self.betButton = Button:new({ text = 'Bet 10', x = 220, y = 393 })
    self.betButton:setClickHandler(function()
       self:startRound(10)
    end)
@@ -80,7 +78,7 @@ function GameView:initialize()
    self:addChild(self.evenMoneyButton)
 
    -- dealer's cards on table
-   self.dealerCards = CardGroup:new({x = 20, y = 70})
+   self.dealerCards = CardGroup:new({x = 20, y = 75})
    self:addChild(self.dealerCards)
 
    -- player's cards on table
@@ -92,12 +90,12 @@ function GameView:initialize()
    self:addChild(menuButton)
 
    -- small logo
-   local smallLogo = Node:new({x = 490, y = 6, width = 128, height = 64})
+   local smallLogo = Node:new({x = 502, y = 5, width = 128, height = 64})
    smallLogo:setImage('media/images/logo.png')
    self:addChild(smallLogo)
 
    -- game title
-   local gameTitle = Title:new({x = 20, y = 1, text = 'Free play', width = 600})
+   local gameTitle = Title:new({x = 20, y = 0, text = 'Free play', width = 600})
    self:addChild(gameTitle)
 end
 
@@ -106,8 +104,8 @@ function GameView:startRound(bet)
 
    self.playerCards:empty()
    self.dealerCards:empty()
-   self.playerTotalLabel.text = ''
-   self.dealerTotalLabel.text = ''
+   self.playerCards:setTotal('')
+   self.dealerCards:setTotal('')
 
    self.betButton:hide()
 
@@ -116,10 +114,10 @@ function GameView:startRound(bet)
 
    self.playerCards:addCard(self.currentRound.playerCards[1], 0)
    self.playerCards:addCard(self.currentRound.playerCards[2], 0.2, function()
-      self.playerTotalLabel.text = self:getPlayerTotalString()
+      self.playerCards:setTotal(self:getPlayerTotalString())
    end)
    self.dealerCards:addCard(self.currentRound.dealerCards[1], 0.6, function()
-      self.dealerTotalLabel.text = self:getDealerTotalString()
+      self.dealerCards:setTotal(self:getDealerTotalString())
       if self.currentRound:playerHasBlackjack() then
          if self.currentRound:evenMoneyPossible() then
             self.evenMoneyButton:show()
@@ -146,9 +144,8 @@ end
 
 function GameView:hit()
    self:hideGameButtons()
-
    self.playerCards:addCard(self.currentRound:hit(), 0, function()
-      self.playerTotalLabel.text = self:getPlayerTotalString()
+      self.playerCards:setTotal(self:getPlayerTotalString())
       if self.currentRound:playerIsBusted() or self.currentRound:playerShouldStand() then
          self:dealerTurn(0.5)
       else
@@ -170,7 +167,7 @@ function GameView:double()
    self:hideGameButtons()
 
    self.playerCards:addCard(self.currentRound:hit(), 0, function()
-      self.playerTotalLabel.text = self:getPlayerTotalString()
+      self.playerCards:setTotal(self:getPlayerTotalString())
       self:dealerTurn(0.5)
    end)
 end
@@ -181,13 +178,11 @@ end
 
 function GameView:dealerTurn(delay)
    delay = delay or 0
-
    self:hideGameButtons()
-
    Utilities.delay(delay, function()
       self.currentRound:dealerTurn(0.6, function(card)
          self.dealerCards:addCard(card, 0, function()
-            self.dealerTotalLabel.text = self:getDealerTotalString()
+            self.dealerCards:setTotal(self:getDealerTotalString())
          end)
       end, function()
          self.betButton:show()
@@ -207,8 +202,8 @@ function GameView:reset()
    self:hideGameButtons()
    self.betButton:show()
 
-   self.playerTotalLabel.text = ''
-   self.dealerTotalLabel.text = ''
+   self.playerCards:setTotal('')
+   self.dealerCards:setTotal('')
 end
 
 function GameView:hideGameButtons()
@@ -227,13 +222,13 @@ function GameView:getPlayerTotalString()
    local totals = self.currentRound:getPlayerTotal()
    local minTotals = _.min(totals)
    if self.currentRound:playerHasBlackjack() then
-      return 'Blackjack (21)'
+      return '21 - Blackjack'
    elseif minTotals <= 21 then
       return table.concat(_.select(totals, function(k, v)
          return v <= 21
       end), '/')
    else
-      return 'Bust (' .. minTotals .. ')'
+      return minTotals .. ' - Bust'
    end
 end
 
@@ -242,14 +237,23 @@ function GameView:getDealerTotalString()
    local totals = self.currentRound:getDealerTotal()
    local minTotals = _.min(totals)
    if self.currentRound:dealerHasBlackjack() then
-      return 'Blackjack (21)'
+      return '21 - Blackjack'
    elseif minTotals <= 21 then
       return table.concat(_.select(totals, function(k, v)
          return v <= 21
       end), '/')
    else
-      return 'Bust (' .. minTotals .. ')'
+      return minTotals .. ' - Bust'
    end
+end
+
+function GameView:draw()
+   if self:isVisible() then
+      love.graphics.setColor({255,255,255,16})
+      love.graphics.rectangle("fill", 0, 0, 640, 70)
+      love.graphics.rectangle("fill", 0, 365, 640, 115)
+   end
+   View.draw(self)
 end
 
 function GameView:update()
