@@ -4,6 +4,7 @@
 function generateDeck()
    local suits = {'hearts', 'spades', 'diamonds', 'clubs' }
    local values = {2,3,4,5,6,7,8,9,10,'J','Q','K','A'}
+   --return {{suit = 'spades', value = 'K'}, {suit = 'hearts', value = 'A'}, {suit = 'spades', value = 'A'}, {suit = 'diamonds', value = 'A'}}
    return _.flatten(_.map(suits, function(sk,sv)
       return _.map(values, function(vk, vv)
          return {suit = sv, value = vv}
@@ -161,4 +162,14 @@ end
 function Round:playerCanSplit()
    local cards = self.playerCards
    return _.size(cards) == 2 and cards[1].value == cards[2].value
+end
+
+function Round:playerCanInsure()
+   return _.size(self.playerCards) == 2 
+      and _.size(self.dealerCards) == 1 
+      and self.dealerCards[1].value == 'A'
+end
+
+function Round:evenMoneyPossible()
+   return self:playerCanInsure() and self:playerHasBlackjack()
 end
