@@ -5,7 +5,9 @@ function CardGroup:initialize(params)
    self.cardAmount = 0
    self.cards = {}
    
-   self.totalLabel = Label:new({x = 83, y = 50, align = 'left', text = 'foo'})
+   self.nameLabel = Label:new({x = 83, y = 35, align = 'left', text = ''})
+   self:addChild(self.nameLabel)
+   self.totalLabel = Label:new({x = 83, y = 65, align = 'left', text = ''})
    self:addChild(self.totalLabel)
 end
 
@@ -17,7 +19,8 @@ function CardGroup:addCard(card, delay, callback)
    self.cardAmount = self.cardAmount + 1
 
    Utilities.delay(delay, function()
-      local labelTween = tween(0.4, self.totalLabel, {x = 83 + self.cardAmount * 27}, 'outCirc')
+      local nameLabelTween = tween(0.4, self.nameLabel, {x = 83 + self.cardAmount * 27}, 'outCirc')
+      local totalLabelTween = tween(0.4, self.totalLabel, {x = 83 + self.cardAmount * 27}, 'outCirc')
       local cardTween = tween(0.4, newCard, {y = 0, angle = 0}, 'outCirc', callback)
    end)
 end
@@ -25,8 +28,11 @@ end
 function CardGroup:empty()
    Node.removeAllChildren(self)
    self.cardAmount = 0
+   self.nameLabel.x = 83
+   self.totalLabel.x = 83
    self.totalLabel.text = ''
    self:addChild(self.totalLabel)
+   self:addChild(self.nameLabel)
 end
 
 function CardGroup:setTotal(total)

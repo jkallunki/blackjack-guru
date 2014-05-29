@@ -79,10 +79,12 @@ function GameView:initialize()
 
    -- dealer's cards on table
    self.dealerCards = CardGroup:new({x = 20, y = 75})
+   self.dealerCards.nameLabel.text = 'Dealer'
    self:addChild(self.dealerCards)
 
    -- player's cards on table
    self.playerCards = CardGroup:new({x = 20, y = 220})
+   self.playerCards.nameLabel.text = 'You'
    self:addChild(self.playerCards)
 
    -- menu button
