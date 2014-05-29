@@ -5,9 +5,9 @@ function CardGroup:initialize(params)
    self.cardAmount = 0
    self.cards = {}
    
-   self.nameLabel = Label:new({x = 83, y = 35, align = 'left', text = ''})
+   self.nameLabel = Label:new({x = 0, y = 35, align = 'left', text = ''})
    self:addChild(self.nameLabel)
-   self.totalLabel = Label:new({x = 83, y = 65, align = 'left', text = ''})
+   self.totalLabel = Label:new({x = 0, y = 65, align = 'left', text = ''})
    self:addChild(self.totalLabel)
 end
 
@@ -28,8 +28,8 @@ end
 function CardGroup:empty()
    Node.removeAllChildren(self)
    self.cardAmount = 0
-   self.nameLabel.x = 83
-   self.totalLabel.x = 83
+   self.nameLabel.x = 0
+   self.totalLabel.x = 0
    self.totalLabel.text = ''
    self:addChild(self.totalLabel)
    self:addChild(self.nameLabel)
