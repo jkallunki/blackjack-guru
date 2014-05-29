@@ -4,47 +4,54 @@ function GameView:initialize()
    self.defaults = {width = love.window.getWidth(), height = love.window.getHeight()}
    View.initialize(self)
 
+
+   self.credits = 10000
+
+   self.creditsTitleLabel = Label:new({x = 500, y = 390, align = 'right', text = 'Credits:', width = 130, color = {239,225,153,255}})
+   self:addChild(self.creditsTitleLabel)
+
+   self.creditsLabel = Title:new({x = 504, y = 413, align = 'right', text = '', width = 130, color = {239,225,153,255}})
+   self:addChild(self.creditsLabel)
+
+
    -- player hand total value
    self.playerTotalLabel = Label:new({x = 410, y = 300, align = 'right', text = ''})
    self:addChild(self.playerTotalLabel)
-
 
    -- player hand total value
    self.dealerTotalLabel = Label:new({x = 410, y = 140, align = 'right', text = ''})
    self:addChild(self.dealerTotalLabel)
 
    -- bet button
-   self.betButton = Button:new({ text = 'Bet 10', x = 220, y = 415 })
+   self.betButton = Button:new({ text = 'Bet 10', x = 220, y = 407 })
    self.betButton:setClickHandler(function()
       self:startRound(10)
    end)
    self:addChild(self.betButton)
 
    -- hit button
-   self.hitButton = GameButton:new({ text = 'Hit', x = 215, y = 425, visible = false, width = 160})
+   self.hitButton = GameButton:new({ text = 'Hit', x = 195, y = 425, visible = false, width = 160})
    self.hitButton:setClickHandler(function()
       self:hit()
    end)
    self:addChild(self.hitButton)
 
    -- stand button
-   self.standButton = GameButton:new({ text = 'Stand', x = 380, y = 425, visible = false, width = 140 })
+   self.standButton = GameButton:new({ text = 'Stand', x = 360, y = 425, visible = false, width = 140 })
    self.standButton:setClickHandler(function()
       self:stand()
    end)
    self:addChild(self.standButton)
 
-
-
    -- double button
-   self.doubleButton = GameButton:new({ text = 'Double', x = 215, y = 370, visible = false, width = 160 })
+   self.doubleButton = GameButton:new({ text = 'Double', x = 195, y = 370, visible = false, width = 160 })
    self.doubleButton:setClickHandler(function()
       self:double()
    end)
    self:addChild(self.doubleButton)
 
    -- split button
-   self.splitButton = GameButton:new({ text = 'Split', x = 380, y = 370, visible = false, width = 140 })
+   self.splitButton = GameButton:new({ text = 'Split', x = 360, y = 370, visible = false, width = 140 })
    self.splitButton:setClickHandler(function()
       self:split()
    end)
@@ -52,21 +59,21 @@ function GameView:initialize()
 
 
    -- surrender button
-   self.surrenderButton = GameButton:new({ text = 'Surrender', x = 10, y = 425, visible = false, width = 200 })
+   self.surrenderButton = GameButton:new({ text = 'Surrender', x = 10, y = 425, visible = false, width = 180 })
    self.surrenderButton:setClickHandler(function()
       self:surrender()
    end)
    self:addChild(self.surrenderButton)
 
    -- insurance button
-   self.insuranceButton = GameButton:new({ text = 'Insurance', x = 10, y = 370, visible = false, width = 200 })
+   self.insuranceButton = GameButton:new({ text = 'Insurance', x = 10, y = 370, visible = false, width = 180 })
    self.insuranceButton:setClickHandler(function()
       --
    end)
    self:addChild(self.insuranceButton)
 
    -- even money button
-   self.evenMoneyButton = GameButton:new({ text = 'Even money', x = 155, y = 425, visible = false, width = 220 })
+   self.evenMoneyButton = GameButton:new({ text = 'Even money', x = 135, y = 425, visible = false, width = 220 })
    self.evenMoneyButton:setClickHandler(function()
       --
    end)
@@ -104,7 +111,9 @@ function GameView:startRound(bet)
 
    self.betButton:hide()
 
-   self.currentRound:start(10)
+   self.currentRound:start(bet)
+   self:removeCredits(bet)
+
    self.playerCards:addCard(self.currentRound.playerCards[1], 0)
    self.playerCards:addCard(self.currentRound.playerCards[2], 0.2, function()
       self.playerTotalLabel.text = self:getPlayerTotalString()
@@ -241,4 +250,17 @@ function GameView:getDealerTotalString()
    else
       return 'Bust (' .. minTotals .. ')'
    end
+end
+
+function GameView:update()
+   View.update(self)
+   self.creditsLabel.text = self.credits
+end
+
+function GameView:removeCredits(amount)
+   self.credits = self.credits - amount
+end
+
+function GameView:addCredits(amount)
+   self.credits = self.credits + amount
 end
