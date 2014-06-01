@@ -12,16 +12,11 @@ function GameView:initialize()
    self.creditsLabel = Title:new({x = 503, y = 402, align = 'right', text = '', width = 130, color = {239,225,153,255}})
    self:addChild(self.creditsLabel)
 
-   -- player hand total value
-   self.playerTotalLabel = Label:new({x = 410, y = 300, align = 'right', text = ''})
-   self:addChild(self.playerTotalLabel)
-
-   -- player hand total value
-   self.dealerTotalLabel = Label:new({x = 410, y = 140, align = 'right', text = ''})
-   self:addChild(self.dealerTotalLabel)
+   self.roundResultLabel = Label:new({x = 20, y = 377, width = 600, visible = false, align = 'center', text = ''})
+   self:addChild(self.roundResultLabel)
 
    -- bet button
-   self.betButton = Button:new({ text = 'Bet 10', x = 220, y = 393 })
+   self.betButton = Button:new({ text = 'Bet 10', x = 220, y = 415 })
    self.betButton:setClickHandler(function()
       self:startRound(10)
    end)
@@ -117,6 +112,7 @@ function GameView:startRound(bet)
    self.playerCards:setTotal('')
    self.dealerCards:setTotal('')
 
+   self.roundResultLabel:hide()
    self.betButton:hide()
 
    self.currentRound:start(bet)
@@ -202,10 +198,13 @@ function GameView:dealerTurn(delay)
          local winnings = self.currentRound:getWinnings()
          self:addCredits(winnings)
          if winnings > 0 then
+            self.roundResultLabel.text = 'You won ' .. winnings .. ' credits!'
             self.audio.win:play()
          else
+            self.roundResultLabel.text = 'You lost.'
             self.audio.lose:play()
          end
+         self.roundResultLabel:show()
          self.betButton:show()
       end)
    end)
