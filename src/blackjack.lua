@@ -44,6 +44,8 @@ function Round:initialize(params)
    self.dealerCards = {}
    self.playerCards = {}
    self.deck = _.shuffle(generateDeck(), love.timer.getTime())
+   self.insurance = false
+   self.bet = 0
 end
 
 -- user actions
@@ -153,6 +155,10 @@ function Round:playerIsBusted()
    return _.min(calculateHandValue(self.playerCards)) > 21
 end
 
+function Round:dealerIsBusted()
+   return _.min(calculateHandValue(self.dealerCards)) > 21
+end
+
 function Round:playerCanDouble()
    return not _.isEmpty(_.select(self:getPlayerTotal(), function(k,v)
       return 9 <= v and v <= 11
@@ -172,4 +178,51 @@ end
 
 function Round:evenMoneyPossible()
    return self:playerCanInsure() and self:playerHasBlackjack()
+end
+
+function Round:setInsurance()
+   self.insurance = true
+end
+
+function Round:playerHasInsurance()
+   return self.insurance
+end
+
+-- returns ratio of the bet that is payed to the player
+function Round:getResult()
+   if self:playerIsBusted() then
+      return 0
+   else
+      if self:playerHasBlackjack() then
+         if self:playerHasInsurance() then
+            return 2
+         elseif self:dealerHasBlackjack() then
+            return 1
+         else
+            return 2.5
+         end
+      else
+         if self:dealerHasBlackjack() then
+            if self:playerHasInsurance() then
+               return 1
+            else
+               return 0
+            end
+         elseif self:dealerIsBusted() then
+            return 2
+         else
+            if self:maxValidPlayerTotal() > self:maxValidDealerTotal() then
+               return 2
+            elseif self:maxValidPlayerTotal() < self:maxValidDealerTotal() then
+               return 0
+            else
+               return 1
+            end
+         end
+      end
+   end
+end
+
+function Round:getWinnings()
+   return self.bet * self:getResult()
 end

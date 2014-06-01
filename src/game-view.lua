@@ -66,7 +66,9 @@ function GameView:initialize()
    -- insurance button
    self.insuranceButton = GameButton:new({ text = 'Insurance', x = 10, y = 370, visible = false, width = 180 })
    self.insuranceButton:setClickHandler(function()
-      --
+      self:removeCredits(5)
+      self.insuranceButton:hide()
+      self.currentRound:setInsurance()
    end)
    self:addChild(self.insuranceButton)
 
@@ -99,6 +101,12 @@ function GameView:initialize()
    -- game title
    local gameTitle = Title:new({x = 20, y = 0, text = 'Free play', width = 600})
    self:addChild(gameTitle)
+
+   -- audio
+   self.audio = {
+      win = love.audio.newSource("media/audio/reward.mp3", "static"),
+      lose = love.audio.newSource("media/audio/fail.mp3", "static")
+   }
 end
 
 function GameView:startRound(bet)
@@ -149,6 +157,9 @@ function GameView:hit()
    self.playerCards:addCard(self.currentRound:hit(), 0, function()
       self.playerCards:setTotal(self:getPlayerTotalString())
       if self.currentRound:playerIsBusted() or self.currentRound:playerShouldStand() then
+         if self.currentRound:playerIsBusted() then
+            self.audio.lose:play()
+         end
          self:dealerTurn(0.5)
       else
          self.hitButton:show()
@@ -167,7 +178,8 @@ end
 
 function GameView:double()
    self:hideGameButtons()
-
+   self:removeCredits(10)
+   self.currentRound.bet = self.currentRound.bet + 10
    self.playerCards:addCard(self.currentRound:hit(), 0, function()
       self.playerCards:setTotal(self:getPlayerTotalString())
       self:dealerTurn(0.5)
@@ -187,6 +199,13 @@ function GameView:dealerTurn(delay)
             self.dealerCards:setTotal(self:getDealerTotalString())
          end)
       end, function()
+         local winnings = self.currentRound:getWinnings()
+         self:addCredits(winnings)
+         if winnings > 0 then
+            self.audio.win:play()
+         else
+            self.audio.lose:play()
+         end
          self.betButton:show()
       end)
    end)
