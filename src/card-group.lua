@@ -15,7 +15,7 @@ function CardGroup:addCard(card, delay, callback)
    delay = delay or 0
    local newCard = Card:new({x = self.cardAmount * 27, y = -800, angle = -1, suit = card.suit, value = card.value})
    table.insert(self.cards, newCard)
-   Node.addChild(self, newCard)
+   self:addChild(newCard)
    self.cardAmount = self.cardAmount + 1
 
    Utilities.delay(delay, function()
@@ -37,4 +37,19 @@ end
 
 function CardGroup:setTotal(total)
    self.totalLabel.text = total
+end
+
+function CardGroup:push(card)
+   _.push(self.cards, card)
+   self:addChild(card)
+   self.cardAmount = self.cardAmount + 1
+end
+
+function CardGroup:pop()
+   self.cardAmount = self.cardAmount - 1
+   local card = _.unshift(self.cards)
+   self.children = _.reject(self.children, function(k,v)
+      return v == card
+   end)
+   return card
 end

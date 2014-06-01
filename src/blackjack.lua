@@ -4,7 +4,7 @@
 function generateDeck()
    local suits = {'hearts', 'spades', 'diamonds', 'clubs' }
    local values = {2,3,4,5,6,7,8,9,10,'J','Q','K','A'}
-   --return {{suit = 'spades', value = 'K'}, {suit = 'hearts', value = 'A'}, {suit = 'spades', value = 'A'}, {suit = 'diamonds', value = 'A'}}
+   --return {{suit = 'spades', value = '8'}, {suit = 'hearts', value = '8'}, {suit = 'clubs', value = '8'}, {suit = 'diamonds', value = '8'}}
    return _.flatten(_.map(suits, function(sk,sv)
       return _.map(values, function(vk, vv)
          return {suit = sv, value = vv}
@@ -44,7 +44,8 @@ function Round:initialize(params)
    self.dealerCards = {}
    self.playerCards = {}
    self.deck = _.shuffle(generateDeck(), love.timer.getTime())
-   self.insurance = false
+   self.insured = false
+   self.doubled = false
    self.bet = 0
 end
 
@@ -67,11 +68,13 @@ function Round:stand()
 end
 
 function Round:double()
-
+   self.doubled = true
+   return self:hit()
 end
 
 function Round:split()
-
+   self.playerCards2 = {}
+   _.push(self.playerCards2, _.pop(self.playerCards))
 end
 
 function Round:surrender()
@@ -181,11 +184,11 @@ function Round:evenMoneyPossible()
 end
 
 function Round:setInsurance()
-   self.insurance = true
+   self.insured = true
 end
 
 function Round:playerHasInsurance()
-   return self.insurance
+   return self.insured
 end
 
 -- returns ratio of the bet that is payed to the player
@@ -208,7 +211,11 @@ function Round:getResult()
       else
          if self:dealerHasBlackjack() then
             if self:playerHasInsurance() then
-               return 1.5
+               if self.doubled then
+                  return 0.75
+               else
+                  return 1.5
+               end
             else
                return 0
             end

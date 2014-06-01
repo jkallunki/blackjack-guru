@@ -70,7 +70,10 @@ function GameView:initialize()
    -- even money button
    self.evenMoneyButton = GameButton:new({ text = 'Even money', x = 135, y = 425, visible = false, width = 220 })
    self.evenMoneyButton:setClickHandler(function()
-      --
+      self:removeCredits(5)
+      self.evenMoneyButton:hide()
+      self.currentRound:setInsurance()
+      self:stand()
    end)
    self:addChild(self.evenMoneyButton)
 
@@ -83,6 +86,11 @@ function GameView:initialize()
    self.playerCards = CardGroup:new({x = 20, y = 220})
    self.playerCards.nameLabel.text = 'You'
    self:addChild(self.playerCards)
+
+   -- second group for split hands
+   self.playerCards2 = CardGroup:new({x = 20, y = 220})
+   self.playerCards2.nameLabel.text = ''
+   self:addChild(self.playerCards2)
 
    -- menu button
    local menuButton = MenuButton:new()
@@ -108,6 +116,8 @@ function GameView:startRound(bet)
    self.currentRound = Round:new()
 
    self.playerCards:empty()
+   self.playerCards2:empty()
+   self.playerCards2.x = 20
    self.dealerCards:empty()
    self.playerCards:setTotal('')
    self.dealerCards:setTotal('')
@@ -176,7 +186,10 @@ function GameView:double()
    self:hideGameButtons()
    self:removeCredits(10)
    self.currentRound.bet = self.currentRound.bet + 10
-   self.playerCards:addCard(self.currentRound:hit(), 0, function()
+   self.playerCards:addCard(self.currentRound:double(), 0, function()
+      if self.currentRound:playerIsBusted() then
+         self.audio.lose:play()
+      end
       self.playerCards:setTotal(self:getPlayerTotalString())
       self:dealerTurn(0.5)
    end)
@@ -184,6 +197,12 @@ end
 
 function GameView:split()
    self.splitButton:hide()
+   self.currentRound:split()
+   self.playerCards2:push(self.playerCards:pop())
+   self.playerCards:setTotal(self:getPlayerTotalString())
+   local splitTween = tween(0.4, self.playerCards2, {x = 490}, 'outCirc', function()
+      self:hit()
+   end)
 end
 
 function GameView:dealerTurn(delay)
@@ -218,6 +237,8 @@ end
 function GameView:reset()
    self.dealerCards:empty()
    self.playerCards:empty()
+   self.playerCards2.x = 20
+   self.playerCards2:empty()
 
    self:hideGameButtons()
    self.betButton:show()
