@@ -191,7 +191,11 @@ end
 -- returns ratio of the bet that is payed to the player
 function Round:getResult()
    if self:playerIsBusted() then
-      return 0
+      if self:playerHasInsurance() and self:dealerHasBlackjack() then
+         return 1
+      else
+         return 0
+      end
    else
       if self:playerHasBlackjack() then
          if self:playerHasInsurance() then
