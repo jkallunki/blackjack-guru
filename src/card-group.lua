@@ -19,8 +19,8 @@ function CardGroup:addCard(card, delay, callback)
    self.cardAmount = self.cardAmount + 1
 
    Utilities.delay(delay, function()
-      local nameLabelTween = tween(0.4, self.nameLabel, {x = 83 + self.cardAmount * 27}, 'outCirc')
-      local totalLabelTween = tween(0.4, self.totalLabel, {x = 83 + self.cardAmount * 27}, 'outCirc')
+      local nameLabelTween = tween(0.4, self.nameLabel, {x = 88 + self.cardAmount * 27}, 'outCirc')
+      local totalLabelTween = tween(0.4, self.totalLabel, {x = 88 + self.cardAmount * 27}, 'outCirc')
       local cardTween = tween(0.4, newCard, {y = 0, angle = 0}, 'outCirc', callback)
    end)
 end
