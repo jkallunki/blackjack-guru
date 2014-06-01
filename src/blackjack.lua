@@ -192,7 +192,7 @@ end
 function Round:getResult()
    if self:playerIsBusted() then
       if self:playerHasInsurance() and self:dealerHasBlackjack() then
-         return 1
+         return 1.5
       else
          return 0
       end
@@ -208,7 +208,7 @@ function Round:getResult()
       else
          if self:dealerHasBlackjack() then
             if self:playerHasInsurance() then
-               return 1
+               return 1.5
             else
                return 0
             end
