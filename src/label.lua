@@ -17,9 +17,11 @@ end
 
 function Label:draw()
    Node.draw(self)
-   love.graphics.setColor(self.color)
-   love.graphics.setFont(self.font)
-   love.graphics.printf(self.text, self:getX(), self:getY(), self.width, self.align)
+   if self:isVisible() then
+      love.graphics.setColor(self.color)
+      love.graphics.setFont(self.font)
+      love.graphics.printf(self.text, self:getX(), self:getY(), self.width, self.align)
+   end
 end
 
 function Label:setText(text)
