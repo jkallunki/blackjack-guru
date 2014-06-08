@@ -188,11 +188,11 @@ function Round:playerHasMultipleHands()
 end
 
 function Round:playerHasNextHand()
-   return _.size(self.playerHands) > 1 and self.playerHand.cards == self.playerHands[1].cards
+   return _.size(self.playerHands) > 1 and self.playerHand == self.playerHands[1]
 end
 
 function Round:playNextHand()
-   self.playerHand.cards = self.playerHands[2].cards
+   self.playerHand = self.playerHands[2]
 end
 
 -- returns ratio of the bet that is payed to the player

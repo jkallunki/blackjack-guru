@@ -92,6 +92,9 @@ function GameView:initialize()
    self.playerCards2.nameLabel.text = ''
    self:addChild(self.playerCards2)
 
+   -- reference to the card group that is currently being played (switch on split)
+   self.currentPlayerCards = self.playerCards
+
    -- menu button
    local menuButton = MenuButton:new()
    self:addChild(menuButton)
@@ -118,6 +121,8 @@ function GameView:startRound(bet)
    self.playerCards:empty()
    self.playerCards2:empty()
    self.playerCards2.x = 20
+   self.currentPlayerCards = self.playerCards
+
    self.dealerCards:empty()
    self.playerCards:setTotal('')
    self.dealerCards:setTotal('')
@@ -160,8 +165,8 @@ end
 
 function GameView:hit()
    self:hideGameButtons()
-   self.playerCards:addCard(self.currentRound:hit(), 0, function()
-      self.playerCards:setTotal(self:getPlayerTotalString())
+   self.currentPlayerCards:addCard(self.currentRound:hit(), 0, function()
+      self.currentPlayerCards:setTotal(self:getPlayerTotalString())
       if self.currentRound:playerIsBusted() or self.currentRound:playerShouldStand() then
          if self.currentRound:playerIsBusted() then
             self.audio.lose:play()
@@ -186,6 +191,7 @@ function GameView:finishHand(dealerTurnDelay)
    dealerTurnDelay = dealerTurnDelay or 0
    if self.currentRound:playerHasNextHand() then
       Utilities.delay(1, function()
+         self.currentPlayerCards = self.playerCards2
          self.currentRound:playNextHand()
          self:hit()
       end)
@@ -198,21 +204,24 @@ function GameView:double()
    self:hideGameButtons()
    self:removeCredits(10)
    self.currentRound.bet = self.currentRound.bet + 10
-   self.playerCards:addCard(self.currentRound:double(), 0, function()
+   self.currentPlayerCards:addCard(self.currentRound:double(), 0, function()
       if self.currentRound:playerIsBusted() then
          self.audio.lose:play()
       end
-      self.playerCards:setTotal(self:getPlayerTotalString())
+      self.currentPlayerCards:setTotal(self:getPlayerTotalString())
       self:finishHand(0.5)
    end)
 end
 
 function GameView:split()
-   self.splitButton:hide()
+   self:hideGameButtons()
    self.currentRound:split()
-   self.playerCards2:push(self.playerCards:pop())
+   local splitCard = self.playerCards:pop()
+   splitCard.x = 0
+   self.playerCards2:push(splitCard)
    self.playerCards:setTotal(self:getPlayerTotalString())
-   local splitTween = tween(0.4, self.playerCards2, {x = 490}, 'outCirc', function()
+   --self.currentPlayerCards = self.playerCards2
+   local splitTween = tween(0.4, self.playerCards2, {x = 400}, 'outCirc', function()
       self:hit()
    end)
 end
@@ -256,6 +265,7 @@ function GameView:reset()
    self.betButton:show()
 
    self.playerCards:setTotal('')
+   self.playerCards2:setTotal('')
    self.dealerCards:setTotal('')
 end
 
