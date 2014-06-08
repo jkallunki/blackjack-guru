@@ -113,14 +113,20 @@ function GameView:initialize()
       lose = love.audio.newSource("media/audio/fail.mp3", "static")
    }
 
+   -- hint-box
+   self.hintBox = HintBox:new()
+   self:addChild(self.hintBox)
+
+
    -- modal
-   modalWindow = ModalWindow:new()
-   modalWindow:hide()
-   self:addChild(modalWindow)
+   self.modalWindow = ModalWindow:new()
+   self.modalWindow:hide()
+   self:addChild(self.modalWindow)
+
 end
 
 function GameView:startRound(bet)
-   modalWindow:hide()
+   self.modalWindow:hide()
 
    self.currentRound = Round:new()
 

@@ -19,8 +19,10 @@ require "src/card"
 require "src/card-group"
 require "src/main-menu"
 require "src/tutorial-menu"
+require "src/tutorial"
 require "src/game-view"
 require "src/modal-window"
+require "src/hint-box"
 require "src/blackjack"
 
 

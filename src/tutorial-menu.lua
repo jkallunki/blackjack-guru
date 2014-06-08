@@ -22,11 +22,11 @@ function TutorialMenu:initialize()
       gameView:show()
       gameView.gameTitle.text = '1. Introduction'
       self:hide()
-      modalWindow:show()
-      modalWindow.text = [[
+      gameView.modalWindow:show()
+      gameView.modalWindow.text = [[
          Blackjack is a card game where players compete against the dealer. Player's aim is to achieve a hand value that is closer to 21 than the dealer's without going over. Going over 21 is called "busting" and getting 21 with the first two cards is called "blackjack". The player also wins if the dealer busts and the player does not, or if the player gets blackjack and the dealer does not. If the player and the dealer have hands with same values, the game is a tie (also called "push") and the player gets his initial bet back.
 
-         Face cards (K, Q and J) are counted as ten points. An ace can be counted as 1 point or 11 points. Other cards are counted as their numeric values.
+         Face cards (K, Q and J) are counted as ten points. An ace (A) can be counted as 1 point or 11 points. Other cards are counted as their numeric values.
       
          After the initial bet is set, the players are dealt two cards and the dealer gets one. For simplicity, we use 10 credits as an initial bet for each round in this tutorial.
 
