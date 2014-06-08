@@ -104,17 +104,24 @@ function GameView:initialize()
    self:addChild(smallLogo)
 
    -- game title
-   local gameTitle = Title:new({x = 20, y = 0, text = 'Free play', width = 600})
-   self:addChild(gameTitle)
+   self.gameTitle = Title:new({x = 20, y = 0, text = 'Free play', width = 600})
+   self:addChild(self.gameTitle)
 
    -- audio
    self.audio = {
       win = love.audio.newSource("media/audio/reward.mp3", "static"),
       lose = love.audio.newSource("media/audio/fail.mp3", "static")
    }
+
+   -- modal
+   modalWindow = ModalWindow:new()
+   modalWindow:hide()
+   self:addChild(modalWindow)
 end
 
 function GameView:startRound(bet)
+   modalWindow:hide()
+
    self.currentRound = Round:new()
 
    self.playerCards:empty()

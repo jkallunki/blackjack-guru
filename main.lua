@@ -20,6 +20,7 @@ require "src/card-group"
 require "src/main-menu"
 require "src/tutorial-menu"
 require "src/game-view"
+require "src/modal-window"
 require "src/blackjack"
 
 

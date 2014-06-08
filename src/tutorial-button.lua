@@ -9,8 +9,4 @@ function TutorialButton:initialize(text, y)
    self.font = love.graphics.newFont("media/fonts/nunitolight.ttf", 24)
    self.textAlign = 'left'
    self.height = 55
-   self:setClickHandler(function()
-      gameView:show()
-      self.parentNode:hide()
-   end)
 end

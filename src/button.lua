@@ -30,7 +30,7 @@ end
 
 function Button:update(dt)
    self.active = false
-   if(self.clickable) then
+   if self.clickable then
       mx, my = love.mouse.getPosition()
       if mx >= self:getX() and 
          mx <= self:getX() + self.width and 
