@@ -202,7 +202,6 @@ function Round:getHandResult(hand)
    else
       if hand:isBlackjack() then
          if self.evenMoney then
-            print('even money')
             return 2
          else
             if self.dealerHand:isBlackjack() then
