@@ -127,6 +127,9 @@ function GameView:startRound(bet)
    self.playerCards:setTotal('')
    self.dealerCards:setTotal('')
 
+   self.playerCards2:setTotal('')
+   self.playerCards2.nameLabel.text = ''
+
    self.roundResultLabel:hide()
    self.betButton:hide()
 
@@ -175,6 +178,9 @@ function GameView:hit()
       else
          self.hitButton:show()
          self.standButton:show()
+         if self.currentRound:playerCanDouble() then
+            self.doubleButton:show()
+         end
       end
    end)
 end
@@ -185,18 +191,27 @@ function GameView:stand()
 end
 
 function GameView:surrender()
+   self.currentRound:surrender()
    self:finishHand()
 end
 
 function GameView:finishHand(dealerTurnDelay)
    dealerTurnDelay = dealerTurnDelay or 0
    if self.currentRound:playerHasNextHand() then
-      Utilities.delay(1, function()
+      Utilities.delay(0.5, function()
          self.currentPlayerCards = self.playerCards2
+         self.playerCards:setDim(true)
+         self.playerCards2:setDim(false)
+         self.playerCards2.nameLabel.text = 'You'
          self.currentRound:playNextHand()
-         self:hit()
+         local tempX = self.playerCards.cardAmount * 27 + 175
+         local finishTween = tween(0.4, self.playerCards2, {x = tempX}, 'outCirc', function()
+            self:hit()
+         end)
       end)
    else
+      self.playerCards:setDim(false)
+      self.playerCards2:setDim(false)
       self:dealerTurn(dealerTurnDelay)
    end
 end
@@ -204,7 +219,7 @@ end
 function GameView:double()
    self:hideGameButtons()
    self:removeCredits(10)
-   self.currentRound.bet = self.currentRound.bet + 10
+   self.currentRound.playerHand.bet = self.currentRound.playerHand.bet + 10
    self.currentPlayerCards:addCard(self.currentRound:double(), 0, function()
       if self.currentRound:playerIsBusted() then
          self.audio.lose:play()
@@ -217,12 +232,14 @@ end
 function GameView:split()
    self:hideGameButtons()
    self.currentRound:split()
+   self:removeCredits(10)
    local splitCard = self.playerCards:pop()
    splitCard.x = 0
    self.playerCards2:push(splitCard)
+   self.playerCards2:setDim(true)
    self.playerCards:setTotal(self:getPlayerTotalString())
    --self.currentPlayerCards = self.playerCards2
-   local splitTween = tween(0.4, self.playerCards2, {x = 400}, 'outCirc', function()
+   local splitTween = tween(0.4, self.playerCards2, {x = 520}, 'outCirc', function()
       self:hit()
    end)
 end

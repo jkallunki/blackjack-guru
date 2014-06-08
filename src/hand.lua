@@ -17,17 +17,17 @@ function Hand:getValue()
    end, {0})
 end
 
-function Round:isBlackjack()
+function Hand:isBlackjack()
    return _.size(self.cards) == 2 and _.reduce(self.cards, function(state, card)
       return state + cardValue(card, true)
    end, 0) == 21
 end
 
 function Hand:isBusted()
-   return _.min(calculateHandValue(self.cards)) > 21
+   return _.min(self:getValue()) > 21
 end
 
-function Round:maxNotBustedTotal()
+function Hand:maxNotBustedTotal()
    return _.max(_.select(self:getValue(), function(k,v)
       return v <= 21
    end))

@@ -32,18 +32,19 @@ function Round:initialize(params)
    self.dealerHand = Hand:new()
    self.playerHands = {Hand:new()} -- player's hands (player can have 2 hands after a split)
    self.playerHand = self.playerHands[1] -- reference to the hand that is currently being played
+   self.playerHand.bet = 0
    self.deck = _.shuffle(generateDeck(), love.timer.getTime())
    --debug deck for testing split functionality:
    --self.deck = _.append({{suit = 'spades', value = '8'}, {suit = 'hearts', value = '8'}, {suit = 'clubs', value = '8'}, {suit = 'diamonds', value = '8'}}, generateDeck())
+   --self.deck = _.append({{suit = 'spades', value = '5'}, {suit = 'hearts', value = '5'}, {suit = 'clubs', value = 'K'}, {suit = 'clubs', value = '5'}, {suit = 'diamonds', value = '5'}}, generateDeck())
    self.insured = false
-   self.doubled = false
-   self.bet = 0
+   self.surrendered = false
 end
 
 -- user actions
 
 function Round:start(bet)
-   self.bet = bet
+   self.playerHand.bet = bet
    _.push(self.playerHand.cards, _.pop(self.deck), _.pop(self.deck))
    _.push(self.dealerHand.cards, _.pop(self.deck))
 end
@@ -65,12 +66,13 @@ end
 
 function Round:split()
    local playerHand2 = Hand:new()
+   playerHand2.bet = 10
    _.push(playerHand2.cards, _.pop(self.playerHand.cards))
    _.push(self.playerHands, playerHand2)
 end
 
 function Round:surrender()
-
+   self.surrendered = true
 end
 
 function Round:insurance()
@@ -155,7 +157,7 @@ function Round:dealerIsBusted()
 end
 
 function Round:playerCanDouble()
-   return not _.isEmpty(_.select(self:getPlayerTotal(), function(k,v)
+   return _.size(self.playerHand.cards) == 2 and not _.isEmpty(_.select(self:getPlayerTotal(), function(k,v)
       return 9 <= v and v <= 11
    end))
 end
@@ -196,9 +198,9 @@ function Round:playNextHand()
 end
 
 -- returns ratio of the bet that is payed to the player
-function Round:getResult()
-   if self:playerIsBusted() then
-      if self:playerHasInsurance() and self:dealerHasBlackjack() then
+function Round:getHandResult(hand)
+   if hand:isBusted() then
+      if self:playerHasInsurance() and self.dealerHand:isBlackjack() then
          return 1.5
       else
          return 0
@@ -213,9 +215,9 @@ function Round:getResult()
             return 2.5
          end
       else
-         if self:dealerHasBlackjack() then
+         if self.dealerHand:isBlackjack() then
             if self:playerHasInsurance() then
-               if self.doubled then
+               if hand.doubled then
                   return 0.75
                else
                   return 1.5
@@ -223,12 +225,12 @@ function Round:getResult()
             else
                return 0
             end
-         elseif self:dealerIsBusted() then
+         elseif self.dealerHand:isBusted() then
             return 2
          else
-            if self:maxValidPlayerTotal() > self:maxValidDealerTotal() then
+            if hand:maxNotBustedTotal() > self.dealerHand:maxNotBustedTotal() then
                return 2
-            elseif self:maxValidPlayerTotal() < self:maxValidDealerTotal() then
+            elseif hand:maxNotBustedTotal() < self.dealerHand:maxNotBustedTotal() then
                return 0
             else
                return 1
@@ -239,5 +241,11 @@ function Round:getResult()
 end
 
 function Round:getWinnings()
-   return self.bet * self:getResult()
+   if self.surrendered then
+      return self.playerHand.bet / 2
+   else
+      return _.reduce(self.playerHands, function(state, hand) 
+         return state + (hand.bet * self:getHandResult(hand))
+      end, 0)
+   end
 end

@@ -29,11 +29,17 @@ function Card:initialize(params)
 
    love.graphics.draw(self.suitImage, 5, 45, 0, 0.16, 0.16, 0, 0)
    love.graphics.setCanvas()
+
+   self.dim = false
 end
 
 function Card:draw()
    love.graphics.setBlendMode('premultiplied')
-   love.graphics.setColor({255,255,255,255})
+   if self.dim then
+      love.graphics.setColor({96,96,96,255})
+   else
+      love.graphics.setColor({255,255,255,255})
+   end
    love.graphics.draw(self.canvas, self:getX() + 50, self:getY() + 75, self.angle, 1, 1, 50, 75)
    love.graphics.setBlendMode('alpha')
 end

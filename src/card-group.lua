@@ -53,3 +53,9 @@ function CardGroup:pop()
    end)
    return card
 end
+
+function CardGroup:setDim(dim)
+   _.each(self.cards, function(k, card)
+      card.dim = dim
+   end)
+end
