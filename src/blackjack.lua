@@ -4,7 +4,6 @@
 function generateDeck()
    local suits = {'hearts', 'spades', 'diamonds', 'clubs' }
    local values = {2,3,4,5,6,7,8,9,10,'J','Q','K','A'}
-   --return {{suit = 'spades', value = '8'}, {suit = 'hearts', value = '8'}, {suit = 'clubs', value = '8'}, {suit = 'diamonds', value = '8'}}
    return _.flatten(_.map(suits, function(sk,sv)
       return _.map(values, function(vk, vv)
          return {suit = sv, value = vv}
@@ -25,25 +24,17 @@ function cardValue(cardOrValue, aceHigh)
    return value
 end
 
--- calculates possible hand values from an array of cards
--- returns a table containing all possible values e.g {'A','A','2'} => {4,14,24}
-function calculateHandValue(cards)
-   return _.reduce(cards, function(total, card)
-      local value = _.detect({'J','Q','K'}, card.value) and 10 or card.value
-      return _.sort(_.uniq(_.flatten(_.map(total, function(k,v)
-         return value == 'A' and {v + 1, v + 11} or v + value
-      end))))
-   end, {0})
-end
-
 -- SINGLE ROUND
 
 Round = class('Round')
 
 function Round:initialize(params)
-   self.dealerCards = {}
-   self.playerCards = {}
+   self.dealerHand = Hand:new()
+   self.playerHands = {Hand:new()} -- player's hands (player can have 2 hands after a split)
+   self.playerHand = self.playerHands[1] -- reference to the hand that is currently being played
    self.deck = _.shuffle(generateDeck(), love.timer.getTime())
+   --debug deck for testing split functionality:
+   --self.deck = _.append({{suit = 'spades', value = '8'}, {suit = 'hearts', value = '8'}, {suit = 'clubs', value = '8'}, {suit = 'diamonds', value = '8'}}, generateDeck())
    self.insured = false
    self.doubled = false
    self.bet = 0
@@ -53,13 +44,13 @@ end
 
 function Round:start(bet)
    self.bet = bet
-   _.push(self.playerCards, _.pop(self.deck), _.pop(self.deck))
-   _.push(self.dealerCards, _.pop(self.deck))
+   _.push(self.playerHand.cards, _.pop(self.deck), _.pop(self.deck))
+   _.push(self.dealerHand.cards, _.pop(self.deck))
 end
 
 function Round:hit()
    local drawnCard = _.pop(self.deck)
-   _.push(self.playerCards, drawnCard)
+   _.push(self.playerHand.cards, drawnCard)
    return drawnCard
 end
 
@@ -73,8 +64,9 @@ function Round:double()
 end
 
 function Round:split()
-   self.playerCards2 = {}
-   _.push(self.playerCards2, _.pop(self.playerCards))
+   local playerHand2 = Hand:new()
+   _.push(playerHand2.cards, _.pop(self.playerHand.cards))
+   _.push(self.playerHands, playerHand2)
 end
 
 function Round:surrender()
@@ -97,7 +89,7 @@ function Round:dealerTurn(interval, afterCard, finally)
    if self:dealerShouldDraw() then
       Utilities.delay(interval, function()
          drawnCard = _.pop(self.deck)
-         _.push(self.dealerCards, drawnCard)
+         _.push(self.dealerHand.cards, drawnCard)
          afterCard(drawnCard)
          self:dealerTurn(interval, afterCard, finally)
       end)
@@ -107,11 +99,11 @@ function Round:dealerTurn(interval, afterCard, finally)
 end
 
 function Round:getDealerTurnCards()
-   return _.tail(self.dealerCards)
+   return _.tail(self.dealerHand.cards)
 end
 
 function Round:getPlayerTotal()
-   return calculateHandValue(self.playerCards)
+   return self.playerHand:getValue()
 end
 
 function Round:maxValidDealerTotal()
@@ -137,7 +129,7 @@ function Round:dealerShouldDraw()
 end
 
 function Round:getDealerTotal()
-   return calculateHandValue(self.dealerCards)
+   return self.dealerHand:getValue()
 end
 
 function Round:isBlackjack(cards)
@@ -147,19 +139,19 @@ function Round:isBlackjack(cards)
 end
 
 function Round:playerHasBlackjack()
-   return self:isBlackjack(self.playerCards)
+   return self:isBlackjack(self.playerHand.cards)
 end
 
 function Round:dealerHasBlackjack()
-   return self:isBlackjack(self.dealerCards)
+   return self:isBlackjack(self.dealerHand.cards)
 end
 
 function Round:playerIsBusted()
-   return _.min(calculateHandValue(self.playerCards)) > 21
+   return _.min(self.playerHand:getValue()) > 21
 end
 
 function Round:dealerIsBusted()
-   return _.min(calculateHandValue(self.dealerCards)) > 21
+   return _.min(self.dealerHand:getValue()) > 21
 end
 
 function Round:playerCanDouble()
@@ -169,14 +161,14 @@ function Round:playerCanDouble()
 end
 
 function Round:playerCanSplit()
-   local cards = self.playerCards
+   local cards = self.playerHand.cards
    return _.size(cards) == 2 and cards[1].value == cards[2].value
 end
 
 function Round:playerCanInsure()
-   return _.size(self.playerCards) == 2 
-      and _.size(self.dealerCards) == 1 
-      and self.dealerCards[1].value == 'A'
+   return _.size(self.playerHand.cards) == 2 
+      and _.size(self.dealerHand.cards) == 1 
+      and self.dealerHand.cards[1].value == 'A'
 end
 
 function Round:evenMoneyPossible()
@@ -189,6 +181,18 @@ end
 
 function Round:playerHasInsurance()
    return self.insured
+end
+
+function Round:playerHasMultipleHands()
+   return _.size(self.playerHands) > 1 
+end
+
+function Round:playerHasNextHand()
+   return _.size(self.playerHands) > 1 and self.playerHand.cards == self.playerHands[1].cards
+end
+
+function Round:playNextHand()
+   self.playerHand.cards = self.playerHands[2].cards
 end
 
 -- returns ratio of the bet that is payed to the player

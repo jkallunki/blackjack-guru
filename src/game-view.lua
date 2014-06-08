@@ -128,18 +128,18 @@ function GameView:startRound(bet)
    self.currentRound:start(bet)
    self:removeCredits(bet)
 
-   self.playerCards:addCard(self.currentRound.playerCards[1], 0)
-   self.playerCards:addCard(self.currentRound.playerCards[2], 0.2, function()
+   self.playerCards:addCard(self.currentRound.playerHand.cards[1], 0)
+   self.playerCards:addCard(self.currentRound.playerHand.cards[2], 0.2, function()
       self.playerCards:setTotal(self:getPlayerTotalString())
    end)
-   self.dealerCards:addCard(self.currentRound.dealerCards[1], 0.6, function()
+   self.dealerCards:addCard(self.currentRound.dealerHand.cards[1], 0.6, function()
       self.dealerCards:setTotal(self:getDealerTotalString())
       if self.currentRound:playerHasBlackjack() then
          if self.currentRound:evenMoneyPossible() then
             self.evenMoneyButton:show()
             self.standButton:show()
          else
-            self:dealerTurn(0.5)
+            self:finishHand(0.5)
          end
       else    
          self.hitButton:show()
@@ -166,7 +166,7 @@ function GameView:hit()
          if self.currentRound:playerIsBusted() then
             self.audio.lose:play()
          end
-         self:dealerTurn(0.5)
+         self:finishHand(0.5)
       else
          self.hitButton:show()
          self.standButton:show()
@@ -175,11 +175,23 @@ function GameView:hit()
 end
 
 function GameView:stand()
-   self:dealerTurn()
+   self:finishHand()
 end
 
 function GameView:surrender()
-   self:dealerTurn()
+   self:finishHand()
+end
+
+function GameView:finishHand(dealerTurnDelay)
+   dealerTurnDelay = dealerTurnDelay or 0
+   if self.currentRound:playerHasNextHand() then
+      Utilities.delay(1, function()
+         self.currentRound:playNextHand()
+         self:hit()
+      end)
+   else
+      self:dealerTurn(dealerTurnDelay)
+   end
 end
 
 function GameView:double()
@@ -191,7 +203,7 @@ function GameView:double()
          self.audio.lose:play()
       end
       self.playerCards:setTotal(self:getPlayerTotalString())
-      self:dealerTurn(0.5)
+      self:finishHand(0.5)
    end)
 end
 
