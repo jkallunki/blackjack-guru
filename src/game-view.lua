@@ -180,6 +180,7 @@ function GameView:hit()
 end
 
 function GameView:stand()
+   self:hideGameButtons()
    self:finishHand()
 end
 
