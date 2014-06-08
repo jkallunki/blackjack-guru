@@ -284,6 +284,8 @@ function GameView:reset()
    self.playerCards:setTotal('')
    self.playerCards2:setTotal('')
    self.dealerCards:setTotal('')
+
+   self.roundResultLabel.text = ''
 end
 
 function GameView:hideGameButtons()
