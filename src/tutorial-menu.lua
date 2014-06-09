@@ -46,6 +46,7 @@ function TutorialMenu:initialize()
 
    self.tutorialButton4 = TutorialButton:new('4. Insurance', 270)
    self.tutorialButton4:setClickHandler(function()
+      currentTutorial = TutorialInsurance:new()
       gameView:show()
       gameView.gameTitle.text = '4. Insurance'
       self:hide()

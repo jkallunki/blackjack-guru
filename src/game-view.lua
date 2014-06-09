@@ -69,9 +69,7 @@ function GameView:initialize()
    -- insurance button
    self.insuranceButton = GameButton:new({ text = 'Insurance', x = 10, y = 370, visible = false, width = 180 })
    self.insuranceButton:setClickHandler(function()
-      self:removeCredits(5)
-      self.insuranceButton:hide()
-      self.currentRound:setInsurance()
+      self:insurance()
    end)
    self:addChild(self.insuranceButton)
 
@@ -224,6 +222,16 @@ function GameView:stand()
    self:finishHand()
 end
 
+function GameView:insurance()
+   if currentTutorial ~= nil and currentTutorial.onInsurance ~= nil then
+      currentTutorial:onInsurance()
+   end
+
+   self:removeCredits(5)
+   self.insuranceButton:hide()
+   self.currentRound:setInsurance()
+end
+
 function GameView:surrender()
    if currentTutorial ~= nil and currentTutorial.onSurrender ~= nil then
       currentTutorial:onSurrender()
@@ -245,7 +253,7 @@ function GameView:finishHand(dealerTurnDelay)
          if currentTutorial ~= nil and currentTutorial.onNextHand ~= nil then
             currentTutorial:onNextHand()
          end
-         
+
          self.currentPlayerCards = self.playerCards2
          self.playerCards:setDim(true)
          self.playerCards2:setDim(false)

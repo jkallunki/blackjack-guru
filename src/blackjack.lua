@@ -232,13 +232,14 @@ function Round:getHandResult(hand)
 end
 
 function Round:getWinnings()
+   local insuranceWin = 0
+   if self:playerHasInsurance() and self.dealerHand:isBlackjack() then
+      insuranceWin = self.insurance * 3
+   end
+   
    if self.surrendered then
-      return self.playerHand.bet / 2
+      return insuranceWin + self.playerHand.bet / 2
    else
-      local insuranceWin = 0
-      if self:playerHasInsurance() and self.dealerHand:isBlackjack() then
-         insuranceWin = self.insurance * 3
-      end
       return insuranceWin + _.reduce(self.playerHands, function(state, hand) 
          return state + (hand.bet * self:getHandResult(hand))
       end, 0)
