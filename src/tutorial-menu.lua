@@ -44,28 +44,20 @@ function TutorialMenu:initialize()
    end)
    self:addChild(self.tutorialButton3)
 
-   self.tutorialButton4 = TutorialButton:new('4. Surrender', 270)
+   self.tutorialButton4 = TutorialButton:new('4. Insurance', 270)
    self.tutorialButton4:setClickHandler(function()
       gameView:show()
-      gameView.gameTitle.text = '4. Surrender'
+      gameView.gameTitle.text = '4. Insurance'
       self:hide()
    end)
    self:addChild(self.tutorialButton4)
 
-   self.tutorialButton5 = TutorialButton:new('5. Insurance', 330)
+   self.tutorialButton5 = TutorialButton:new('5. Even money', 330)
    self.tutorialButton5:setClickHandler(function()
       gameView:show()
-      gameView.gameTitle.text = '5. Insurance'
+      gameView.gameTitle.text = '5. Even money'
       self:hide()
    end)
    self:addChild(self.tutorialButton5)
-
-   self.tutorialButton6 = TutorialButton:new('6. Even money', 390)
-   self.tutorialButton6:setClickHandler(function()
-      gameView:show()
-      gameView.gameTitle.text = '6. Even money'
-      self:hide()
-   end)
-   self:addChild(self.tutorialButton6)
 
 end
