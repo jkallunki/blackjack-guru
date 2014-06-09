@@ -76,9 +76,7 @@ function GameView:initialize()
    -- even money button
    self.evenMoneyButton = GameButton:new({ text = 'Even money', x = 135, y = 425, visible = false, width = 220 })
    self.evenMoneyButton:setClickHandler(function()
-      self.evenMoneyButton:hide()
-      self.currentRound:setEvenMoney()
-      self:stand()
+      self:evenMoney()
    end)
    self:addChild(self.evenMoneyButton)
 
@@ -230,6 +228,16 @@ function GameView:insurance()
    self:removeCredits(5)
    self.insuranceButton:hide()
    self.currentRound:setInsurance()
+end
+
+function GameView:evenMoney()
+   if currentTutorial ~= nil and currentTutorial.onEvenMoney ~= nil then
+      currentTutorial:onEvenMoney()
+   end
+
+   self.evenMoneyButton:hide()
+   self.currentRound:setEvenMoney()
+   self:stand()
 end
 
 function GameView:surrender()

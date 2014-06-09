@@ -55,6 +55,7 @@ function TutorialMenu:initialize()
 
    self.tutorialButton5 = TutorialButton:new('5. Even money', 330)
    self.tutorialButton5:setClickHandler(function()
+      currentTutorial = TutorialEvenMoney:new()
       gameView:show()
       gameView.gameTitle.text = '5. Even money'
       self:hide()
