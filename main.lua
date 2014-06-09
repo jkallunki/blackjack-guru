@@ -19,7 +19,8 @@ require "src/card"
 require "src/card-group"
 require "src/main-menu"
 require "src/tutorial-menu"
-require "src/tutorial"
+require "src/tutorial-introduction"
+require "src/tutorial-double"
 require "src/game-view"
 require "src/modal-window"
 require "src/hint-box"
@@ -28,6 +29,7 @@ require "src/blackjack"
 
 function love.load()
    love.window.setMode(640, 480, {resizable=false, fsaa=16})
+   love.filesystem.setIdentity("blackjack_guru")
 
    -- global variable that shows if mouse has been clicked on current tick
    mouseClicked = false
@@ -49,6 +51,8 @@ function love.load()
    gameView = GameView:new()
    gameView:hide()
    stage:addChild(gameView)
+
+   currentTutorial = nil
 end
 
 function love.update(dt)

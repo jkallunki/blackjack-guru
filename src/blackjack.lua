@@ -28,7 +28,7 @@ end
 
 Round = class('Round')
 
-function Round:initialize(params)
+function Round:initialize()
    self.dealerHand = Hand:new()
    self.playerHands = {Hand:new()} -- player's hands (player can have 2 hands after a split)
    self.playerHand = self.playerHands[1] -- reference to the hand that is currently being played
@@ -38,6 +38,9 @@ function Round:initialize(params)
    --self.deck = _.append({{suit = 'spades', value = '8'}, {suit = 'hearts', value = '8'}, {suit = 'clubs', value = '8'}, {suit = 'diamonds', value = '8'}}, generateDeck())
    --self.deck = _.append({{suit = 'spades', value = '5'}, {suit = 'hearts', value = '5'}, {suit = 'clubs', value = 'K'}, {suit = 'clubs', value = '5'}, {suit = 'diamonds', value = '5'}}, generateDeck())
    --self.deck = _.append({{suit = 'spades', value = 'A'}, {suit = 'hearts', value = 'K'}, {suit = 'clubs', value = 'A'}, {suit = 'clubs', value = 9}, {suit = 'diamonds', value = '5'}}, generateDeck())
+   if currentTutorial ~= nil and currentTutorial.deck ~= nil then
+      self.deck = _.clone(currentTutorial.deck)
+   end
    self.insurance = 0
    self.surrendered = false
    self.evenMoney = false

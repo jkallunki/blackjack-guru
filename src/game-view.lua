@@ -22,6 +22,14 @@ function GameView:initialize()
    end)
    self:addChild(self.betButton)
 
+   -- end tutorial button
+   self.endTutorialButton = Button:new({ text = 'End tutorial', x = 220, y = 415, visible = false })
+   self.endTutorialButton:setClickHandler(function()
+      self:hide()
+      tutorialMenu:show()
+   end)
+   self:addChild(self.endTutorialButton)
+
    -- hit button
    self.hitButton = GameButton:new({ text = 'Hit', x = 195, y = 425, visible = false, width = 160})
    self.hitButton:setClickHandler(function()
@@ -126,6 +134,11 @@ function GameView:initialize()
 end
 
 function GameView:startRound(bet)
+
+   if currentTutorial ~= nil and currentTutorial.onStartRound ~= nil then
+      currentTutorial:onStartRound()
+   end
+
    self.modalWindow:hide()
 
    self.currentRound = Round:new()
@@ -179,6 +192,11 @@ function GameView:startRound(bet)
 end
 
 function GameView:hit()
+
+   if currentTutorial ~= nil and currentTutorial.onHit ~= nil then
+      currentTutorial:onHit()
+   end
+
    self:hideGameButtons()
    self.currentPlayerCards:addCard(self.currentRound:hit(), 0, function()
       self.currentPlayerCards:setTotal(self:getPlayerTotalString())
@@ -198,16 +216,28 @@ function GameView:hit()
 end
 
 function GameView:stand()
+   if currentTutorial ~= nil and currentTutorial.onStand ~= nil then
+      currentTutorial:onStand()
+   end
+
    self:hideGameButtons()
    self:finishHand()
 end
 
 function GameView:surrender()
+   if currentTutorial ~= nil and currentTutorial.onSurrender ~= nil then
+      currentTutorial:onSurrender()
+   end
+
    self.currentRound:surrender()
    self:finishHand()
 end
 
 function GameView:finishHand(dealerTurnDelay)
+   if currentTutorial ~= nil and currentTutorial.onFinishHand ~= nil then
+      currentTutorial:onFinishHand()
+   end
+
    dealerTurnDelay = dealerTurnDelay or 0
    if self.currentRound:playerHasNextHand() then
       Utilities.delay(0.5, function()
@@ -229,6 +259,10 @@ function GameView:finishHand(dealerTurnDelay)
 end
 
 function GameView:double()
+   if currentTutorial ~= nil and currentTutorial.onDouble ~= nil then
+      currentTutorial:onDouble()
+   end
+
    self:hideGameButtons()
    self:removeCredits(10)
    self.currentRound.playerHand.bet = self.currentRound.playerHand.bet + 10
@@ -242,6 +276,10 @@ function GameView:double()
 end
 
 function GameView:split()
+   if currentTutorial ~= nil and currentTutorial.onSplit ~= nil then
+      currentTutorial:onSplit()
+   end
+
    self:hideGameButtons()
    self.currentRound:split()
    self:removeCredits(10)
@@ -257,6 +295,10 @@ function GameView:split()
 end
 
 function GameView:dealerTurn(delay)
+   if currentTutorial ~= nil and currentTutorial.onDealerTurn ~= nil then
+      currentTutorial:onDealerTurn()
+   end
+
    delay = delay or 0
    self:hideGameButtons()
    Utilities.delay(delay, function()
@@ -274,14 +316,25 @@ function GameView:dealerTurn(delay)
             self.roundResultLabel.text = 'You lost.'
             self.audio.lose:play()
          end
+
          self.roundResultLabel:show()
          self.betButton:show()
+         
+         if currentTutorial ~= nil and currentTutorial.onRoundResult ~= nil then
+            currentTutorial:onRoundResult(winnings)
+         end
       end)
    end)
 end
 
 function GameView:show()
    Node.show(self)
+   if currentTutorial ~= nil and currentTutorial.intro ~= nil then
+      self.modalWindow:show()
+      self.modalWindow.text = currentTutorial.intro
+   else
+      self.modalWindow:hide()
+   end
    self:reset()
 end
 
@@ -293,6 +346,7 @@ function GameView:reset()
 
    self:hideGameButtons()
    self.betButton:show()
+   self.endTutorialButton:hide()
 
    self.playerCards:setTotal('')
    self.playerCards2:setTotal('')
@@ -362,4 +416,8 @@ end
 
 function GameView:addCredits(amount)
    self.credits = self.credits + amount
+end
+
+function GameView:showHint(text)
+   self.hintBox.text = text
 end
