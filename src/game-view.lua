@@ -241,6 +241,11 @@ function GameView:finishHand(dealerTurnDelay)
    dealerTurnDelay = dealerTurnDelay or 0
    if self.currentRound:playerHasNextHand() then
       Utilities.delay(0.5, function()
+
+         if currentTutorial ~= nil and currentTutorial.onNextHand ~= nil then
+            currentTutorial:onNextHand()
+         end
+         
          self.currentPlayerCards = self.playerCards2
          self.playerCards:setDim(true)
          self.playerCards2:setDim(false)
@@ -319,7 +324,7 @@ function GameView:dealerTurn(delay)
 
          self.roundResultLabel:show()
          self.betButton:show()
-         
+
          if currentTutorial ~= nil and currentTutorial.onRoundResult ~= nil then
             currentTutorial:onRoundResult(winnings)
          end

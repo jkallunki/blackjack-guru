@@ -37,6 +37,7 @@ function TutorialMenu:initialize()
 
    self.tutorialButton3 = TutorialButton:new('3. Split', 210)
    self.tutorialButton3:setClickHandler(function()
+      currentTutorial = TutorialSplit:new()
       gameView:show()
       gameView.gameTitle.text = '3. Split'
       self:hide()
