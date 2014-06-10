@@ -18,7 +18,7 @@ function InfoView:initialize()
 
    local creditsText = [[
       Special thanks to:
-      - Awesome LÖVE community for the engine
+      - LÖVE community for the engine
       - Roland Yonaba for Moses.lua
       - Enrique Garcia for Middleclass and Tween.lua
       - IcoMoon for the card icons
