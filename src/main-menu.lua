@@ -32,6 +32,11 @@ function MainMenu:initialize()
    quitButton:setClickHandler(love.event.quit)
    self:addChild(quitButton)
 
+   -- info button
+   local infoButton = InfoButton:new()
+   self:addChild(infoButton)
+
+
    -- credits
    local creditLabel = Label:new({width = 600, x = 20, y = 440, text = 'BlackJack Guru v1.0.0 by Janne Kallunki'})
    creditLabel.color = {75,118,102,255}

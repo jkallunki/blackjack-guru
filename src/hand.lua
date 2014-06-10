@@ -23,6 +23,19 @@ function Hand:isBlackjack()
    end, 0) == 21
 end
 
+function Hand:isSoft()
+   local validValues = _.select(self:getValue(), function(k,v)
+      return v <= 21
+   end)
+   return validValues ~= nil and _.size(validValues) ~= nil and _.size(validValues) > 1
+end
+
+function Hand:isPair()
+   local value1 = _.detect({'J','Q','K'}, self.cards[1].value) and 10 or self.cards[1].value
+   local value2 = _.detect({'J','Q','K'}, self.cards[2].value) and 10 or self.cards[2].value
+   return _.size(self.cards) == 2 and value1 == value2
+end
+
 function Hand:isBusted()
    return _.min(self:getValue()) > 21
 end

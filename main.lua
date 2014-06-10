@@ -26,6 +26,8 @@ require "src/tutorial-insurance"
 require "src/tutorial-even-money"
 require "src/tutorial-free-play"
 require "src/game-view"
+require "src/info-view"
+require "src/info-button"
 require "src/modal-window"
 require "src/hint-box"
 require "src/blackjack"
@@ -55,6 +57,11 @@ function love.load()
    gameView = GameView:new()
    gameView:hide()
    stage:addChild(gameView)
+
+   -- info view
+   infoView = InfoView:new()
+   infoView:hide()
+   stage:addChild(infoView)
 
    currentTutorial = nil
 end

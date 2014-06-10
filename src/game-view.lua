@@ -366,6 +366,11 @@ function GameView:show()
    else
       self.modalWindow:hide()
    end
+   if currentTutorial ~= nil and currentTutorial.isFreePlay then
+      self.hintBox.height = 45
+   else
+      self.hintBox.height = 140
+   end
    self:reset()
 end
 
@@ -470,5 +475,10 @@ function GameView:addCredits(amount)
 end
 
 function GameView:showHint(text)
-   self.hintBox.text = text
+   if text == '' then
+      self.hintBox:hide()
+   else
+      self.hintBox.text = text
+      self.hintBox:show()
+   end
 end
