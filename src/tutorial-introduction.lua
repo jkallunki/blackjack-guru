@@ -69,10 +69,6 @@ function TutorialIntroduction:onStand()
       else
          gameView:showHint('Awesome!')
       end
-   elseif self.step == 1 then
-      if gameView.currentRound.playerHand:getValue()[1] == 6 then
-         gameView:showHint('What did I tell you? Please try again!')
-      end
    end
 end
 
@@ -88,8 +84,12 @@ function TutorialIntroduction:onRoundResult(winnings)
       if winnings == 5 then
          gameView:showHint('Surrendering gives half of your bet back. You are not going to win much by doing so! Try again.')
       else
-         gameView:showHint('Oh, the dealer won this round, but no problem, let\'s move on!')
-         self.step = 2
+         if gameView.currentRound.playerHand:getValue()[1] == 6 then
+            gameView:showHint('You should always hit on soft 16. Please try again!')
+         else
+            gameView:showHint('Oh, the dealer won this round, but no problem, let\'s move on!')
+            self.step = 2
+         end
       end
    elseif self.step == 2 then
          gameView:showHint('Awesome! Blackjack is better than 21 with more cards and it pays 3:2. Looks like you are getting a hunch of this!')
