@@ -266,7 +266,7 @@ function GameView:finishHand(dealerTurnDelay)
 
    dealerTurnDelay = dealerTurnDelay or 0
    if self.currentRound:playerHasNextHand() then
-      Utilities.delay(0.5, function()
+      self.nextHandDelayRef = Utilities.delay(0.5, function()
 
          if currentTutorial ~= nil and currentTutorial.onNextHand ~= nil then
             currentTutorial:onNextHand()
@@ -278,7 +278,7 @@ function GameView:finishHand(dealerTurnDelay)
          self.playerCards2.nameLabel.text = 'You'
          self.currentRound:playNextHand()
          local tempX = self.playerCards.cardAmount * 27 + 175
-         local finishTween = tween(0.4, self.playerCards2, {x = tempX}, 'outCirc', function()
+         self.finishTween = tween(0.4, self.playerCards2, {x = tempX}, 'outCirc', function()
             self:hit()
          end)
       end)
@@ -320,7 +320,7 @@ function GameView:split()
    self.playerCards2:setDim(true)
    self.playerCards:setTotal(self:getPlayerTotalString())
    --self.currentPlayerCards = self.playerCards2
-   local splitTween = tween(0.4, self.playerCards2, {x = 520}, 'outCirc', function()
+   self.splitTween = tween(0.4, self.playerCards2, {x = 520}, 'outCirc', function()
       self:hit()
    end)
 end
@@ -332,7 +332,7 @@ function GameView:dealerTurn(delay)
 
    delay = delay or 0
    self:hideGameButtons()
-   Utilities.delay(delay, function()
+   self.dealerTurnDelayRef = Utilities.delay(delay, function()
       self.currentRound:dealerTurn(0.6, function(card)
          self.dealerCards:addCard(card, 0, function()
             self.dealerCards:setTotal(self:getDealerTotalString())
@@ -369,7 +369,27 @@ function GameView:show()
    self:reset()
 end
 
+function GameView:hide()
+   Node.hide(self)
+   self:reset()
+end
+
+
 function GameView:reset()
+   if self.currentRound ~= nil then
+      self.currentRound:stop()
+   end
+
+   Utilities.cancelDelay(self.nextHandDelayRef)
+   Utilities.cancelDelay(self.dealerTurnDelayRef)
+
+   tween.stop(self.splitTween)
+   tween.stop(self.finishTween)
+   tween.reset(self.splitTween)
+   tween.reset(self.finishTween)
+
+   self.credits = 10000
+
    self.dealerCards:empty()
    self.playerCards:empty()
    self.playerCards2.x = 20

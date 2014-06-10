@@ -90,14 +90,14 @@ function Round:dealerTurn(interval, afterCard, finally)
    local drawnCard = nil
    interval = interval or 0
    if self:dealerShouldDraw() then
-      Utilities.delay(interval, function()
+      self.dealerDrawDelayRef = Utilities.delay(interval, function()
          drawnCard = _.pop(self.deck)
          _.push(self.dealerHand.cards, drawnCard)
          afterCard(drawnCard)
          self:dealerTurn(interval, afterCard, finally)
       end)
    elseif finally ~= nil then
-      Utilities.delay(interval, finally)
+      self.dealerTurnEndDelayRef = Utilities.delay(interval, finally)
    end
 end
 
@@ -236,7 +236,7 @@ function Round:getWinnings()
    if self:playerHasInsurance() and self.dealerHand:isBlackjack() then
       insuranceWin = self.insurance * 3
    end
-   
+
    if self.surrendered then
       return insuranceWin + self.playerHand.bet / 2
    else
@@ -244,4 +244,9 @@ function Round:getWinnings()
          return state + (hand.bet * self:getHandResult(hand))
       end, 0)
    end
+end
+
+function Round:stop()
+   Utilities.cancelDelay(self.dealerDrawDelayRef)
+   Utilities.cancelDelay(self.dealerTurnEndDelayRef)
 end
