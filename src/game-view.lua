@@ -163,6 +163,11 @@ function GameView:startRound(bet)
    end)
    self.dealerCards:addCard(self.currentRound.dealerHand.cards[1], 0.6, function()
       self.dealerCards:setTotal(self:getDealerTotalString())
+
+      if currentTutorial ~= nil and currentTutorial.onAfterStartRound ~= nil then
+         currentTutorial:onAfterStartRound()
+      end
+
       if self.currentRound:playerHasBlackjack() then
          if self.currentRound:evenMoneyPossible() then
             self.evenMoneyButton:show()
@@ -195,6 +200,11 @@ function GameView:hit()
 
    self:hideGameButtons()
    self.currentPlayerCards:addCard(self.currentRound:hit(), 0, function()
+
+      if currentTutorial ~= nil and currentTutorial.onAfterHit ~= nil then
+         currentTutorial:onAfterHit()
+      end
+
       self.currentPlayerCards:setTotal(self:getPlayerTotalString())
       if self.currentRound:playerIsBusted() or self.currentRound:playerShouldStand() then
          if self.currentRound:playerIsBusted() then

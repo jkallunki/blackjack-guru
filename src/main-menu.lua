@@ -21,7 +21,7 @@ function MainMenu:initialize()
    local freePlayButton = Button:new({ text = 'Free play', x = 220, y = 270 })
    freePlayButton:setClickHandler(function()
       self:hide()
-      currentTutorial = nil
+      currentTutorial = TutorialFreePlay:new()
       gameView.gameTitle.text = 'Free play'
       gameView:show()
    end)
