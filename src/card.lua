@@ -7,7 +7,7 @@ function Card:initialize(params)
    Node.initialize(self, params)
 
    self.suitImage = love.graphics.newImage("media/images/" .. self.suit .. ".png")
-   self.canvas = love.graphics.newCanvas(100, 140)
+   self.canvas = love.graphics.newCanvas(128, 256)
    love.graphics.setCanvas(self.canvas)
    self.canvas:clear()
    love.graphics.setBlendMode('alpha')
@@ -40,6 +40,6 @@ function Card:draw()
    else
       love.graphics.setColor({255,255,255,255})
    end
-   love.graphics.draw(self.canvas, self:getX() + 50, self:getY() + 75, self.angle, 1, 1, 50, 75)
+   love.graphics.draw(self.canvas, self:getX() + 50, self:getY() + 70, self.angle, 1, 1, 50, 70)
    love.graphics.setBlendMode('alpha')
 end
