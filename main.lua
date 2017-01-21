@@ -70,7 +70,7 @@ function love.load()
    currentTutorial = nil
 
    -- camera for zooming etc
-   camera = Camera(320, 240, 0.8)
+   camera = Camera(320, 240, 1)
 end
 
 function love.update(dt)
