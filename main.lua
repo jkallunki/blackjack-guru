@@ -2,6 +2,7 @@
 tween = require "lib/tween"
 class = require "lib/middleclass"
 _     = require "lib/moses"
+Camera= require "lib/camera"
 
 --internal modules
 require "src/node"
@@ -34,7 +35,10 @@ require "src/blackjack"
 
 
 function love.load()
-   love.window.setMode(640, 480, {resizable=false, msaa=16})
+   windowWidth = 640
+   windowHeight = 480
+
+   love.window.setMode(windowWidth, windowHeight, {resizable=false, msaa=16})
    love.filesystem.setIdentity("blackjack_guru")
 
    -- global variable that shows if mouse has been clicked on current tick
@@ -64,6 +68,9 @@ function love.load()
    stage:addChild(infoView)
 
    currentTutorial = nil
+
+   -- camera for zooming etc
+   camera = Camera(320, 240, 0.8)
 end
 
 function love.update(dt)
@@ -84,6 +91,8 @@ function love.keypressed(key, unicode)
 end
 
 function love.draw()
+   camera:attach()
    stage:draw()
+   camera:detach()
    mouseClicked = false
 end

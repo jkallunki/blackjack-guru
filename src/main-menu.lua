@@ -1,7 +1,7 @@
 MainMenu = class('MainMenu', View)
 
 function MainMenu:initialize()
-   self.defaults = {width = love.graphics.getWidth(), height = love.graphics.getHeight()}
+   self.defaults = {width = windowWidth, height = windowHeight}
    View.initialize(self)
 
    -- main logo

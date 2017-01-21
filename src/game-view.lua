@@ -1,7 +1,7 @@
 GameView = class('GameView', View)
 
 function GameView:initialize()
-   self.defaults = {width = love.graphics.getWidth(), height = love.graphics.getHeight()}
+   self.defaults = {width = windowWidth, height = windowHeight}
    View.initialize(self)
 
    self.credits = 10000
