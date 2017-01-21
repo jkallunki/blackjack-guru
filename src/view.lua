@@ -4,6 +4,6 @@
 View = class('View', Node)
 
 function View:initialize()
-   self.defaults = {width = love.window.getWidth(), height = love.window.getHeight()}
+   self.defaults = {width = love.graphics.getWidth(), height = love.graphics.getHeight()}
    Node.initialize(self)
 end

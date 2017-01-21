@@ -34,7 +34,7 @@ require "src/blackjack"
 
 
 function love.load()
-   love.window.setMode(640, 480, {resizable=false, fsaa=16})
+   love.window.setMode(640, 480, {resizable=false, msaa=16})
    love.filesystem.setIdentity("blackjack_guru")
 
    -- global variable that shows if mouse has been clicked on current tick
@@ -74,7 +74,7 @@ function love.update(dt)
 end
 
 function love.mousepressed(mx, my, button)
-   if button == 'l' then
+   if button == 1 then
       mouseClicked = true
    end
 end

@@ -1,7 +1,7 @@
 TutorialMenu = class('TutorialMenu', View)
 
 function TutorialMenu:initialize()
-   self.defaults = {width = love.window.getWidth(), height = love.window.getHeight()}
+   self.defaults = {width = love.graphics.getWidth(), height = love.graphics.getHeight()}
    View.initialize(self)
 
    local menuButton = MenuButton:new()

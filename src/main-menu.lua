@@ -1,7 +1,7 @@
 MainMenu = class('MainMenu', View)
 
 function MainMenu:initialize()
-   self.defaults = {width = love.window.getWidth(), height = love.window.getHeight()}
+   self.defaults = {width = love.graphics.getWidth(), height = love.graphics.getHeight()}
    View.initialize(self)
 
    -- main logo
@@ -38,7 +38,7 @@ function MainMenu:initialize()
 
 
    -- credits
-   local creditLabel = Label:new({width = 600, x = 20, y = 440, text = 'BlackJack Guru v1.0.0 by Janne Kallunki'})
+   local creditLabel = Label:new({width = 600, x = 20, y = 440, text = 'BlackJack Guru v1.1.0 by Janne Kallunki'})
    creditLabel.color = {75,118,102,255}
    creditLabel.font = love.graphics.newFont("media/fonts/nunitolight.ttf", 16)
    self:addChild(creditLabel)
